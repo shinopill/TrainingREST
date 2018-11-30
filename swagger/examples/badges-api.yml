@@ -3,13 +3,13 @@ info:
   version: '0.1.0'
   title: badges API
   description: The badges API
-host: localhost:8080
+host: 192.168.99.100
 basePath: /api
 schemes:
-- http
+  - http
 
 paths:
-  /badge:
+  /badges:
     post:
       description: create a badge
       operationId: createBadge
@@ -37,9 +37,9 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/Badge'
+              $ref: '#/definitions/Badges'
 definitions:
-  Badge:
+  Badges:
     type: object
     properties:
       name:

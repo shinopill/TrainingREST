@@ -17,7 +17,7 @@ public class SwaggerDocumentationConfig {
 
     ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-            .title("Fruits API")
+            .title("Badges API")
             .description("An API to demonstrate Swagger and Spring Boot")
             .license("")
             .licenseUrl("http://unlicense.org")
@@ -31,7 +31,7 @@ public class SwaggerDocumentationConfig {
     public Docket customImplementation(){
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                    .apis(RequestHandlerSelectors.basePackage("io.avalia.fruits.api"))
+                    .apis(RequestHandlerSelectors.basePackage("io.avalia.badges.api"))
                     .build()
                 .directModelSubstitute(org.joda.time.LocalDate.class, java.sql.Date.class)
                 .directModelSubstitute(org.joda.time.DateTime.class, java.util.Date.class)
