@@ -1,59 +1,82 @@
 swagger: '2.0'
 info:
   version: '0.1.0'
-  title: badges API
-  description: The badges API
+  title: badge API
+  description: The badge API
 host: localhost:8080
 basePath: /api
 schemes:
-  - http
+- http
 
-  paths:
-    /badge:
-      post:
-        description: create a badge
-        operationId: createBadge
-        consumes:
-          -application/json
-        parameters:
-          name: badge
-          in: body
-          required: true
+paths:
+  /badge/{appId}:
+    post:
+      description: create a badge
+      operationId: createBadge
+      consumes:
+        -application/json
+      parameters:
+      - $ref: '#/parameters/badge'
+      - $ref: '#/parameters/appId'
+      responses:
+        '201':
+          description: created
           schema:
-            $ref: '#/definitions/Badges'
-          responses:
-            '201':
-              description: created
-              schema:
-                type: object
-      get:
-        description: get the list of the application badges
-        opetationId: getBadges
-        produces:
-        - application/json
-        responses:
-          '200':
-            descritpion: success
-            schema:
-              type: array
-              items:
-                $ref: '#/definitions/Badge'
+            type: object
+    get:
+      description: get the list of the application badges
+      opetationId: getBadges
+      parameters:
+      - $ref: '#/parameters/appId'
+      produces:
+      - application/json
+      responses:
+        '200':
+          descritpion: success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Badge'
 
-    /badge/modify:
-      post:
-        description: modify a badge
-        operationId: modifiyBadge
+  /badge/{appId}/{badgeId}:
+    post:
+      description: modify a the "id" badge of the "id" app
+      operationId: modifiyBadge
+      consume:
+        -application/json
+      parameters:
+      - $ref: '#/parameters/badge'
+      - $ref: '#/parameters/appId'
+      - $ref: '#/parameters/badgeId'
+      responses:
+        '201':
+          description: modified
+          schema:
+            type: object
 
-    /badge/delete:
-      post:
-        description: delete a badge
-        operationId: deleteBadge
+parameters:
+  badge:
+    name: badge
+    in: body
+    required: true
+    schema:
+      $ref: '#/definitions/Badge'
+  appId:
+    in: path
+    name: appId
+    required: true
+    type: double
+  badgeId:
+    in: path
+    name: badgeId
+    required: true
+    type: int
 
-  definitions:
-    Badge:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type: string
+definitions:
+  Badge:
+    type: object
+    properties:
+      name:
+        type: string
+      description:
+        type: string
