@@ -7,8 +7,38 @@ host: localhost:8080
 basePath: /api
 schemes:
   - http
-
   paths:
+    /pointScale:
+      post:
+        description: create a pointScalte
+        operationId: createPointScale
+        consumes:
+          -application/json
+        parameters:
+          name: pointScale
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/PointScale'
+          responses:
+            '201':
+              description: created
+              schema:
+                type: object
+
+
+    /pointScale/update/userPoints:
+      post:
+        description: add/substract points to a user
+        operationId: updateUser
+        consumes:
+          -application/json
+        parameters:
+          name: pointScale
+          in: body
+          required: true
+          schema:
+
     /badge:
       post:
         description: create a badge
@@ -51,6 +81,14 @@ schemes:
 
   definitions:
     Badge:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+
+    PointScale:
       type: object
       properties:
         name:
