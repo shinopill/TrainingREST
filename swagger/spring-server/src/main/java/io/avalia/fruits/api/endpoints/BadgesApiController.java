@@ -8,10 +8,12 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +23,13 @@ import java.util.List;
 @Controller
 public class BadgesApiController implements BadgeApi {
 
+    // TODO: utiliser la appId pour récupérer les badges seulement de l'app voulue
+
     @Autowired
     BadgeRepository badgeRepository;
 
-    public ResponseEntity<Object> createBadges(@ApiParam(value = "", required = true) @Valid @RequestBody Badge badge) {
+    public ResponseEntity<Object> createBadge(@ApiParam(value = "" ,required=true ) @RequestBody Badge badge,
+                                              @ApiParam(value = "",required=true ) @PathVariable("appId") String appId) {
         BadgeEntity newBadgeEntity = toBadgeEntity(badge);
         badgeRepository.save(newBadgeEntity);
         Long id = newBadgeEntity.getId();
@@ -41,7 +46,7 @@ public class BadgesApiController implements BadgeApi {
     }
 
 
-    public ResponseEntity<List<Badge>> getBadges() {
+    public ResponseEntity<List<Badge>> badgeAppIdGet(@ApiParam(value = "",required=true ) @PathVariable("appId") String appId) {
         List<Badge> badges = new ArrayList<>();
         for (BadgeEntity badgeEntity : badgeRepository.findAll()) {
             badges.add(toBadge(badgeEntity));
@@ -49,6 +54,13 @@ public class BadgesApiController implements BadgeApi {
 
         return ResponseEntity.ok(badges);
     }
+
+     public ResponseEntity<Object> modifiyBadge(@ApiParam(value = "" ,required=true ) @RequestBody Badge badge,
+                                        @ApiParam(value = "",required=true ) @PathVariable("appId") String appId,
+                                        @ApiParam(value = "",required=true ) @PathVariable("badgeId") String badgeId){
+        // TODO: a faire
+        return null;
+     }
 
 
     private BadgeEntity toBadgeEntity(Badge badge) {
@@ -63,15 +75,5 @@ public class BadgesApiController implements BadgeApi {
         badge.setName(entity.getName());
         badge.setDescription(entity.getDescription());
         return badge;
-    }
-
-    @Override
-    public ResponseEntity<List<Badge>> badgeGet() {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity<Void> createBadge() {
-        return null;
     }
 }
