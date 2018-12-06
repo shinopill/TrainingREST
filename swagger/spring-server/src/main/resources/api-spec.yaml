@@ -1,76 +1,163 @@
 swagger: '2.0'
 info:
-  version: '0.1.0'
-  title: badge API
-  description: The badge API
-host: localhost:8080
-basePath: /api
+  version: '1.0.0'
+  title: 'Gamification Server'
+  description: "A simple Gamification server for application developpers. It allows
+  them to manage their gamification API"
+host: "localhost:8080"
+basePath: "/api"
 schemes:
-- http
+- "http"
 
 paths:
-  /badge/{appId}:
+  /badges/{appId}:
     post:
-      description: create a badge
-      operationId: createBadge
+      tags:
+      - "badges"
+      summary: "Create a badge for your app"
+      description: "Post a badge with an ID"
+      operationId: 'createBadge'
       consumes:
-        -application/json
+      - application/json
       parameters:
-        - $ref: '#/parameters/badge'
-        - $ref: '#/parameters/appId'
+      - in: body
+        name: "badge"
+        description: "The badge to create"
+        schema:
+          $ref: "#/definitions/Badge"
+      - $ref: '#/parameters/appId'
       responses:
         '201':
           description: created
           schema:
-            type: object
+            $ref : '#/definitions/Badge'
+        '400':
+          description: "Ressource problem"
     get:
+      tags:
+      - "badges"
       description: get the list of the application badges
-      opetationId: getBadges
+      operationId: getBadges
       parameters:
-        - $ref: '#/parameters/appId'
+      - $ref: '#/parameters/appId'
       produces:
       - application/json
       responses:
         '200':
-          descritpion: success
+          description: success
           schema:
             type: array
             items:
               $ref: '#/definitions/Badge'
-
-  /badge/{appId}/{badgeId}:
+  /badges/{appId}/{badgeId}:
     post:
-      description: modify a the "id" badge of the "id" app
+      tags:
+      - "badges"
+      description: modify the "id" badge of the "id" app
+      summary: "modify a badge"
       operationId: modifiyBadge
-      consume:
-        -application/json
+      consumes:
+      - application/json
       parameters:
-      - $ref: '#/parameters/badge'
+      - in: body
+        name: "badge"
+        description: "The updated badge"
+        schema:
+          $ref: "#/definitions/Badge"
       - $ref: '#/parameters/appId'
       - $ref: '#/parameters/badgeId'
       responses:
         '201':
           description: modified
           schema:
-            type: object
+            $ref: '#/definitions/Badge'
+
+  /pointScales/{appId}:
+    post:
+      tags:
+      - "pointScales"
+      description: Create a new PointScale for an application
+      summary: "Create a pointScale for an application"
+      operationId: createPointScale
+      consumes:
+      - application/json
+      parameters:
+      - in: body
+        name: "pointScale"
+        description: "the created pointScale"
+        schema:
+          $ref: '#/definitions/PointScale'
+      - $ref: '#/parameters/appId'
+      responses:
+        '201' :
+          description: "Created"
+          schema:
+            $ref: '#/definitions/PointScale'
+        '400':
+          description: "PointScale not created"
+    get:
+      tags:
+      - "pointScales"
+      description: "Get all the pointScale for an app"
+      summary: "Get all pointScale for an application"
+      operationId: getPointScales
+      parameters:
+      - $ref: '#/parameters/appId'
+      produces:
+      - application/json
+      responses:
+        '200':
+          description: success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/PointScale'
+  /pointScales/{appId}/{pointScaleId}/{username}:
+    post:
+      tags:
+      - "pointScales"
+      description: update users points
+      summary: "Update users points"
+      operationId: givePointScale
+      consumes:
+      - application/json
+      parameters:
+      - in: body
+        name: "pointScale"
+        description: "PointScale updated"
+        schema:
+          $ref: '#/definitions/PointScale'
+      - $ref: '#/parameters/appId'
+      - $ref: '#/parameters/pointScaleId'
+      - $ref: '#/parameters/username'
+      responses:
+        '200':
+          description: "updated"
+          schema:
+            $ref: "#/definitions/PointScale"
+
 
 parameters:
-  badge:
-    name: badge
-    in: body
-    required: true
-    schema:
-      $ref: '#/definitions/Badge'
   appId:
+    name: "appId"
     in: path
-    name: appId
     required: true
-    type: double
+    type: number
   badgeId:
+    name: "badgeId"
     in: path
-    name: badgeId
     required: true
-    type: int
+    type: integer
+  pointScaleId:
+    name: "pointScaleId"
+    in: path
+    required: true
+    type: integer
+  username:
+    name: "username"
+    in: path
+    required: true
+    type: string
 
 definitions:
   Badge:
@@ -80,3 +167,18 @@ definitions:
         type: string
       description:
         type: string
+  PointScale:
+    type: object
+    properties:
+      name:
+        type: string
+      description:
+        type: string
+      percentage:
+        type: integer
+  User:
+    type: object
+    properties:
+      username:
+        type: string
+      
