@@ -1,5 +1,8 @@
 package io.avalia.fruits.entities;
 
+import io.avalia.fruits.api.model.Badge;
+import io.avalia.fruits.api.model.PointScale;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,9 +16,10 @@ public class RuleEntity implements Serializable {
 
     private String      name;
     private String      description;
-    private String      appKey;
-    private BadgeEntity badgeReward;
+    private int         appKey;
+    private Badge       badgeReward;
     private int         pointReward;
+    private PointScale  pointScale;
 
     public String getName() {
         return name;
@@ -33,19 +37,19 @@ public class RuleEntity implements Serializable {
         this.description = description;
     }
 
-    public String getAppKey() {
+    public int getAppKey() {
         return appKey;
     }
 
-    public void setAppKey(String appKey) {
+    public void setAppKey(int appKey) {
         this.appKey = appKey;
     }
 
-    public BadgeEntity getBadgeReward() {
+    public Badge getBadgeReward() {
         return badgeReward;
     }
 
-    public void setBadgeReward(BadgeEntity badgeReward) {
+    public void setBadgeReward(Badge badgeReward) {
         this.badgeReward = badgeReward;
     }
 
@@ -57,8 +61,8 @@ public class RuleEntity implements Serializable {
         this.pointReward = pointReward;
     }
 
+    public PointScale getPointScale() { return pointScale; }
 
-
-
+    public void setPointScale(PointScale pointScale) { this.pointScale = pointScale; }
 
 }
