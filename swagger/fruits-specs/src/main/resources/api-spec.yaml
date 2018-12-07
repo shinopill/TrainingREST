@@ -7,18 +7,18 @@ info:
 host: "localhost:8080"
 basePath: "/api"
 schemes:
-  - http
+  - "http"
 
 paths:
   /badge:
     post:
       tags:
-      - "badges"
+        - "badges"
       summary: "Create a badge for your app"
       description: "Post a badge with an ID"
       operationId: 'createBadge'
       consumes:
-      - application/json
+        - application/json
       parameters:
         - $ref: '#/parameters/badge'
       responses:
@@ -29,7 +29,7 @@ paths:
 
     get:
       tags:
-      - "badges"
+        - "badges"
       description: get the list of the application badges
       operationId: getBadges
       produces:
@@ -47,12 +47,12 @@ paths:
   /badge/{badgeName}:
     post:
       tags:
-      - "badges"
+        - "badges"
       description: modify the "id" badge of the "id" app
       summary: "modify a badge"
       operationId: modifiyBadge
       consumes:
-        -application/json
+        - application/json
       parameters:
         - $ref: '#/parameters/badge'
         - $ref: '#/parameters/badgeName'
@@ -61,7 +61,6 @@ paths:
           description: modified
           schema:
             $ref: '#/definitions/Badge'
-
 
   /pointScale:
     post:
@@ -77,7 +76,7 @@ paths:
           schema:
             type: object
 
-  /pointScales/{pointScaleName}/{user}:
+  /pointScales/{pointScaleName}/{username}:
     get:
       description: return the points the user have
       operationId: getPoints
@@ -91,7 +90,7 @@ paths:
         '200':
           description: success
           schema:
-            type: int
+            type: integer
 
   /pointScales/{pointScaleName}/users:
     get:
@@ -99,6 +98,7 @@ paths:
       operationId: getAllUsersFromPointScale
       parameters:
         - $ref: '#/parameters/appKey'
+        - $ref: '#/parameters/pointScaleName'
       produces:
         - application/json
       responses:
@@ -115,12 +115,13 @@ paths:
       description: create a rule for an app
       operationId: createRule
       consumes:
-        -application/json
+        - application/json
       parameters:
-        in: body
-        name: rule
-        schema:
-          $ref: '#/definitions/Rules'
+        - in: body
+          name: rule
+          required: true
+          schema:
+            $ref: '#/definitions/Rules'
       responses:
         '201':
           description: modified
@@ -132,7 +133,7 @@ paths:
       description: send an event
       operationId: sendEvent
       consumes:
-        -application/json
+        - application/json
       parameters:
         - $ref: '#/parameters/usernameBody'
         - $ref: '#/parameters/ruleName'
@@ -154,7 +155,7 @@ parameters:
     name: appKey
     in: header
     required: true
-    type: int
+    type: integer
 
   badgeName:
     name: badgeName
@@ -169,14 +170,15 @@ parameters:
     type: string
 
   usernameBody:
-    name: username
+    name: usernameBody
     in: body
     required: true
-    type: string
+    schema:
+      type: string
 
   pointScale:
     name: pointScale
-    in: path
+    in: body
     required: true
     schema:
       $ref: '#/definitions/PointScale'
@@ -202,7 +204,7 @@ definitions:
       description:
         type: string
       appKey:
-        type: int
+        type: integer
     required:
       - name
       - description
@@ -216,7 +218,7 @@ definitions:
       description:
         type: string
       appKey:
-        type: int
+        type: integer
     required:
       - name
       - description
@@ -232,7 +234,7 @@ definitions:
       description:
         type: string
       points:
-        type: int
+        type: integer
       pointScale:
         $ref: '#/definitions/PointScale'
       badge:
