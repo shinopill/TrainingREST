@@ -126,7 +126,7 @@ paths:
               $ref: '#/definitions/Badge'
 
 
-  /rules:
+  /rule:
     post:
       tags:
       - "rules"
@@ -139,7 +139,7 @@ paths:
         name: rule
         required: true
         schema:
-          $ref: '#/definitions/Rules'
+          $ref: '#/definitions/Rule'
       responses:
         '201':
           description: created
@@ -150,6 +150,23 @@ paths:
           schema:
             type: object
 
+  /rules:
+    get:
+      tags:
+        - "rules"
+      description: get the list of the application rules
+      operationId: getRules
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/appKey'
+      responses:
+        '200':
+          description: success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Rule'
   /events:
     post:
       tags:
@@ -159,9 +176,11 @@ paths:
       consumes:
       - application/json
       parameters:
-      - $ref: '#/parameters/usernameBody'
-      - $ref: '#/parameters/ruleName'
-      - $ref: '#/parameters/appKey'
+      - name: event
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Event'
       responses:
         '201':
           description: modified
@@ -193,13 +212,6 @@ parameters:
     required: true
     type: string
 
-  usernameBody:
-    name: usernameBody
-    in: body
-    required: true
-    schema:
-      type: string
-
   pointScale:
     name: pointScale
     in: body
@@ -210,12 +222,6 @@ parameters:
   pointScaleName:
     name: pointScaleName
     in: path
-    required: true
-    type: string
-
-  ruleName:
-    in: path
-    name: ruleName
     required: true
     type: string
 
@@ -248,7 +254,7 @@ definitions:
     - description
     - appKey
 
-  Rules:
+  Rule:
     type: object
     properties:
       appKey:
@@ -270,3 +276,17 @@ definitions:
     - points
     - pointScale
     - badge
+
+  Event:
+    type: object
+    properties:
+      appKey:
+        type: integer
+      rules:
+        $ref: '#/definitions/Rule'
+      username:
+        type: string
+    required:
+      - appKey
+      - rules
+      - username

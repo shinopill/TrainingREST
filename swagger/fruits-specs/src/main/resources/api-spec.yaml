@@ -7,20 +7,20 @@ info:
 host: "localhost:8080"
 basePath: "/api"
 schemes:
-- "http"
+  - "http"
 
 paths:
   /badge:
     post:
       tags:
-      - "badges"
+        - "badges"
       summary: "Create a badge for your app"
       description: "Post a badge with an ID"
       operationId: 'createBadge'
       consumes:
-      - application/json
+        - application/json
       parameters:
-      - $ref: '#/parameters/badge'
+        - $ref: '#/parameters/badge'
       responses:
         '201':
           description: created
@@ -33,13 +33,13 @@ paths:
 
     get:
       tags:
-      - "badges"
+        - "badges"
       description: get the list of the application badges
       operationId: getBadges
       produces:
-      - application/json
+        - application/json
       parameters:
-      - $ref: '#/parameters/appKey'
+        - $ref: '#/parameters/appKey'
       responses:
         '200':
           description: success
@@ -51,15 +51,15 @@ paths:
   /badge/{badgeName}:
     post:
       tags:
-      - "badges"
+        - "badges"
       description: modify the "id" badge of the "id" app
       summary: "modify a badge"
       operationId: modifiyBadge
       consumes:
-      - application/json
+        - application/json
       parameters:
-      - $ref: '#/parameters/badge'
-      - $ref: '#/parameters/badgeName'
+        - $ref: '#/parameters/badge'
+        - $ref: '#/parameters/badgeName'
       responses:
         '201':
           description: modified
@@ -71,13 +71,13 @@ paths:
   /pointScale:
     post:
       tags:
-      - "pointScales"
+        - "pointScales"
       description: create a pointScale
       operationId: createPointScale
       consumes:
-      - application/json
+        - application/json
       parameters:
-      - $ref: '#/parameters/pointScale'
+        - $ref: '#/parameters/pointScale'
       responses:
         '201':
           description: created
@@ -91,15 +91,15 @@ paths:
   /pointScales/{pointScaleName}/{username}:
     get:
       tags:
-      - "pointScales"
+        - "pointScales"
       description: return the points the user have
       operationId: getPoints
       parameters:
-      - $ref: '#/parameters/pointScaleName'
-      - $ref: '#/parameters/appKey'
-      - $ref: '#/parameters/username'
+        - $ref: '#/parameters/pointScaleName'
+        - $ref: '#/parameters/appKey'
+        - $ref: '#/parameters/username'
       produces:
-      - application/json
+        - application/json
       responses:
         '200':
           description: success
@@ -109,14 +109,14 @@ paths:
   /pointScales/{pointScaleName}/users:
     get:
       tags:
-      - "pointScales"
+        - "pointScales"
       description: return the list of all the users in the pointScale and the points they have
       operationId: getAllUsersFromPointScale
       parameters:
-      - $ref: '#/parameters/appKey'
-      - $ref: '#/parameters/pointScaleName'
+        - $ref: '#/parameters/appKey'
+        - $ref: '#/parameters/pointScaleName'
       produces:
-      - application/json
+        - application/json
       responses:
         '200':
           description: success
@@ -126,20 +126,20 @@ paths:
               $ref: '#/definitions/Badge'
 
 
-  /rules:
+  /rule:
     post:
       tags:
-      - "rules"
+        - "rules"
       description: create a rule for an app
       operationId: createRule
       consumes:
-      - application/json
+        - application/json
       parameters:
-      - in: body
-        name: rule
-        required: true
-        schema:
-          $ref: '#/definitions/Rules'
+        - in: body
+          name: rule
+          required: true
+          schema:
+            $ref: '#/definitions/Rule'
       responses:
         '201':
           description: created
@@ -150,18 +150,37 @@ paths:
           schema:
             type: object
 
+  /rules:
+    get:
+      tags:
+        - "rules"
+      description: get the list of the application rules
+      operationId: getRules
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/appKey'
+      responses:
+        '200':
+          description: success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Rule'
   /events:
     post:
       tags:
-      - "events"
+        - "events"
       description: send an event
       operationId: sendEvent
       consumes:
-      - application/json
+        - application/json
       parameters:
-      - $ref: '#/parameters/usernameBody'
-      - $ref: '#/parameters/ruleName'
-      - $ref: '#/parameters/appKey'
+        - name: event
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Event'
       responses:
         '201':
           description: modified
@@ -193,13 +212,6 @@ parameters:
     required: true
     type: string
 
-  usernameBody:
-    name: usernameBody
-    in: body
-    required: true
-    schema:
-      type: string
-
   pointScale:
     name: pointScale
     in: body
@@ -210,12 +222,6 @@ parameters:
   pointScaleName:
     name: pointScaleName
     in: path
-    required: true
-    type: string
-
-  ruleName:
-    in: path
-    name: ruleName
     required: true
     type: string
 
@@ -230,9 +236,9 @@ definitions:
       appKey:
         type: integer
     required:
-    - name
-    - description
-    - appKey
+      - name
+      - description
+      - appKey
 
   PointScale:
     type: object
@@ -244,11 +250,11 @@ definitions:
       appKey:
         type: integer
     required:
-    - name
-    - description
-    - appKey
+      - name
+      - description
+      - appKey
 
-  Rules:
+  Rule:
     type: object
     properties:
       appKey:
@@ -264,9 +270,23 @@ definitions:
       badge:
         $ref: '#/definitions/Badge'
     required:
-    - appKey
-    - name
-    - description
-    - points
-    - pointScale
-    - badge
+      - appKey
+      - name
+      - description
+      - points
+      - pointScale
+      - badge
+
+  Event:
+    type: object
+    properties:
+      appKey:
+        type: integer
+      rules:
+        $ref: '#/definitions/Rule'
+      username:
+        type: string
+    required:
+      - appKey
+      - rules
+      - username
