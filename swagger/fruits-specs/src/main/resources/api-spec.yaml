@@ -7,96 +7,132 @@ host: localhost:8080
 basePath: /api
 schemes:
   - http
-  paths:
-    /pointScale:
-      post:
-        description: create a pointScalte
-        operationId: createPointScale
-        consumes:
-          -application/json
-        parameters:
-          name: pointScale
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/PointScale'
-          responses:
-            '201':
-              description: created
-              schema:
-                type: object
-
-
-    /pointScale/update/userPoints:
-      post:
-        description: add/substract points to a user
-        operationId: updateUser
-        consumes:
-          -application/json
-        parameters:
-          name: pointScale
-          in: body
-          required: true
-          schema:
-
-    /badge:
-      post:
-        description: create a badge
-        operationId: createBadge
-        consumes:
-          -application/json
-        parameters:
-          name: badge
-          in: body
-          required: true
-- http
 
 paths:
-  /badge/{appId}:
+  /badge:
     post:
       description: create a badge
       operationId: createBadge
       consumes:
         -application/json
       parameters:
-      - $ref: '#/parameters/badge'
-      - $ref: '#/parameters/appId'
+        - $ref: '#/parameters/badge'
       responses:
         '201':
           description: created
           schema:
             type: object
+
     get:
       description: get the list of the application badges
-      opetationId: getBadges
-      parameters:
-      - $ref: '#/parameters/appId'
+      operationId: getBadges
       produces:
-      - application/json
+        - application/json
+      parameters:
+        - $ref: '#/parameters/appKey'
       responses:
         '200':
-          descritpion: success
+          description: success
           schema:
             type: array
             items:
               $ref: '#/definitions/Badge'
 
-  /badge/{appId}/{badgeId}:
+  /badge/{badgeName}:
     post:
       description: modify a the "id" badge of the "id" app
       operationId: modifiyBadge
-      consume:
+      consumes:
         -application/json
       parameters:
-      - $ref: '#/parameters/badge'
-      - $ref: '#/parameters/appId'
-      - $ref: '#/parameters/badgeId'
+        - $ref: '#/parameters/badge'
+        - $ref: '#/parameters/badgeName'
       responses:
         '201':
           description: modified
           schema:
             type: object
 
+
+  /pointScale:
+    post:
+      description: create a pointScale
+      operationId: createPointScale
+      consumes:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/pointScale'
+      responses:
+        '201':
+          description: created
+          schema:
+            type: object
+
+  /pointScales/{pointScaleName}/{user}:
+    get:
+      description: return the points the user have
+      operationId: getPoints
+      parameters:
+        - $ref: '#/parameters/pointScaleName'
+        - $ref: '#/parameters/appKey'
+        - $ref: '#/parameters/username'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: success
+          schema:
+            type: int
+
+  /pointScales/{pointScaleName}/users:
+    get:
+      description: return the list of all the users in the pointScale and the points they have
+      operationId: getAllUsersFromPointScale
+      parameters:
+        - $ref: '#/parameters/appKey'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Badge'
+
+
+  /rules:
+    post:
+      description: create a rule for an app
+      operationId: createRule
+      consumes:
+        -application/json
+      parameters:
+        in: body
+        name: rule
+        schema:
+          $ref: '#/definitions/Rules'
+      responses:
+        '201':
+          description: modified
+          schema:
+            type: object
+
+  /events:
+    post:
+      description: send an event
+      operationId: sendEvent
+      consumes:
+        -application/json
+      parameters:
+        - $ref: '#/parameters/usernameBody'
+        - $ref: '#/parameters/ruleName'
+        - $ref: '#/parameters/appKey'
+      responses:
+        '201':
+          description: modified
+          schema:
+            type: object
 parameters:
   badge:
     name: badge
@@ -104,30 +140,99 @@ parameters:
     required: true
     schema:
       $ref: '#/definitions/Badge'
-  appId:
-    in: path
-    name: appId
-    required: true
-    type: double
-  badgeId:
-    in: path
-    name: badgeId
+
+  appKey:
+    name: appKey
+    in: header
     required: true
     type: int
 
-  definitions:
-    Badge:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type: string
+  badgeName:
+    name: badgeName
+    in: path
+    required: true
+    type: string
 
-    PointScale:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type: string
+  username:
+    name: username
+    in: path
+    required: true
+    type: string
+
+  usernameBody:
+    name: username
+    in: body
+    required: true
+    type: string
+
+  pointScale:
+    name: pointScale
+    in: path
+    required: true
+    schema:
+      $ref: '#/definitions/PointScale'
+
+  pointScaleName:
+    name: pointScaleName
+    in: path
+    required: true
+    type: string
+
+  ruleName:
+    in: path
+    name: ruleName
+    required: true
+    type: string
+
+definitions:
+  Badge:
+    type: object
+    properties:
+      name:
+        type: string
+      description:
+        type: string
+      appKey:
+        type: int
+    required:
+      - name
+      - description
+      - appKey
+
+  PointScale:
+    type: object
+    properties:
+      name:
+        type: string
+      description:
+        type: string
+      appKey:
+        type: int
+    required:
+      - name
+      - description
+      - appKey
+
+  Rules:
+    type: object
+    properties:
+      appKey:
+        type: integer
+      name:
+        type: string
+      description:
+        type: string
+      points:
+        type: int
+      pointScale:
+        $ref: '#/definitions/PointScale'
+      badge:
+        $ref: '#/definitions/Badge'
+    required:
+      - appKey
+      - name
+      - description
+      - points
+      - pointScale
+      - badge
+

@@ -45,6 +45,11 @@ public class BadgesApiController implements BadgeApi {
         return ResponseEntity.created(location).build();
     }
 
+    @Override
+    public ResponseEntity<List<Badge>> getBadges(String appId) {
+        return null;
+    }
+
 
     public ResponseEntity<List<Badge>> badgeAppIdGet(@ApiParam(value = "",required=true ) @PathVariable("appId") String appId) {
         List<Badge> badges = new ArrayList<>();
