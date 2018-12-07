@@ -1,20 +1,24 @@
 swagger: '2.0'
 info:
-  version: '0.1.0'
-  title: badge API
-  description: The badge API
-host: localhost:8080
-basePath: /api
+  version: '1.0.0'
+  title: 'Gamification Server'
+  description: "A simple Gamification server for application developpers. It allows
+  them to manage their gamification API"
+host: "localhost:8080"
+basePath: "/api"
 schemes:
   - http
 
 paths:
   /badge:
     post:
-      description: create a badge
-      operationId: createBadge
+      tags:
+      - "badges"
+      summary: "Create a badge for your app"
+      description: "Post a badge with an ID"
+      operationId: 'createBadge'
       consumes:
-        -application/json
+      - application/json
       parameters:
         - $ref: '#/parameters/badge'
       responses:
@@ -24,6 +28,8 @@ paths:
             type: object
 
     get:
+      tags:
+      - "badges"
       description: get the list of the application badges
       operationId: getBadges
       produces:
@@ -40,7 +46,10 @@ paths:
 
   /badge/{badgeName}:
     post:
-      description: modify a the "id" badge of the "id" app
+      tags:
+      - "badges"
+      description: modify the "id" badge of the "id" app
+      summary: "modify a badge"
       operationId: modifiyBadge
       consumes:
         -application/json
@@ -51,7 +60,7 @@ paths:
         '201':
           description: modified
           schema:
-            type: object
+            $ref: '#/definitions/Badge'
 
 
   /pointScale:
