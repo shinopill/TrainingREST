@@ -26,6 +26,10 @@ paths:
           description: created
           schema:
             type: object
+        '400':
+          description: already exist
+          schema:
+            type: object
 
     get:
       tags:
@@ -62,6 +66,8 @@ paths:
           schema:
             $ref: '#/definitions/Badge'
 
+
+
   /pointScale:
     post:
       description: create a pointScale
@@ -73,6 +79,10 @@ paths:
       responses:
         '201':
           description: created
+          schema:
+            type: object
+        '400':
+          description: already exist
           schema:
             type: object
 
@@ -124,7 +134,11 @@ paths:
             $ref: '#/definitions/Rules'
       responses:
         '201':
-          description: modified
+          description: created
+          schema:
+            type: object
+        '400':
+          description: already exist
           schema:
             type: object
 
