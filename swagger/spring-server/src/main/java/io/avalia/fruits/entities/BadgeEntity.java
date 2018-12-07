@@ -18,6 +18,7 @@ public class BadgeEntity implements Serializable {
 
     private String name;
     private String description;
+    private int appKey;
 
     public long getId() {
         return id;
@@ -38,4 +39,8 @@ public class BadgeEntity implements Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public int getAppKey() { return appKey; }
+
+    public void setAppKey(int appKey) { this.appKey = appKey; }
 }
