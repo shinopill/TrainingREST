@@ -52,8 +52,7 @@ public class BadgeApiController implements BadgeApi {
     }
 
 
-    public ResponseEntity<Boolean> modifiyBadge(@ApiParam(value = "" ,required=true ) @RequestBody Badge badge,
-                                                @ApiParam(value = "",required=true ) @PathVariable("badgeName") String badgeName){
+    public ResponseEntity<Object> modifiyBadge(@ApiParam(value = "" ,required=true ) @RequestBody Badge badge){
         // TODO: to do
         return null;
     }
