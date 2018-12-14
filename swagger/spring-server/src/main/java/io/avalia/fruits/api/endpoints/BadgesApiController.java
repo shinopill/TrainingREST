@@ -23,7 +23,7 @@ public class BadgesApiController implements BadgesApi {
     @Autowired
     BadgeRepository badgeRepository;
 
-    public ResponseEntity<List<Badge>> getBadges(@ApiParam(value = "" ,required=true ) @RequestHeader(value="appKey", required=true) Integer appKey) {
+    public ResponseEntity<List<Badge>> getBadges(Integer appKey) {
         List<Badge> badges = new ArrayList<>();
         for (BadgeEntity badgeEntity : badgeRepository.findAll()) {
             badges.add(toBadge(badgeEntity));

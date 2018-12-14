@@ -19,7 +19,7 @@ public class RulesApiController implements RulesApi {
     @Autowired
     RuleRepository ruleRepository;
 
-    public ResponseEntity<List<Rule>> getRules(@ApiParam(value = "" ,required=true ) @RequestHeader(value="appKey", required=true) Integer appKey) {
+    public ResponseEntity<List<Rule>> getRules(Integer appKey) {
 
         // TODO: to do
         return null;

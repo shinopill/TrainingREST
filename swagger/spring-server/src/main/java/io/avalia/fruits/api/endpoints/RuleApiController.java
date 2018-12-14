@@ -18,26 +18,25 @@ public class RuleApiController implements RuleApi {
     @Autowired
     RuleRepository ruleRepository;
 
-    public ResponseEntity<Object> createRule(@ApiParam(value = "" ,required=true ) @RequestBody Rule rule) {
+    public ResponseEntity<Object> createRule(Rule rule) {
 
         // TODO: to do
         return null;
     }
 
-    public ResponseEntity<Object> deleteRule(@ApiParam(value = "" ,required=true ) @RequestBody Rule rule) {
+    public ResponseEntity<Object> deleteRule(Rule rule) {
 
         //TODO: to do
         return null;
     }
 
-    public ResponseEntity<Rule> getRule(@ApiParam(value = "" ,required=true ) @RequestHeader(value="appKey", required=true) Integer appKey,
-                                        @ApiParam(value = "",required=true ) @PathVariable("ruleName") String ruleName) {
+    public ResponseEntity<Rule> getRule(Integer appKey, String ruleName) {
 
         //TODO: to do
         return null;
     }
 
-    public ResponseEntity<Object> updateRule(@ApiParam(value = "" ,required=true ) @RequestBody Rule rule) {
+    public ResponseEntity<Object> updateRule(Rule rule) {
 
         //TODO: to do
         return null;

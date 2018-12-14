@@ -14,7 +14,7 @@ public class EventsApiController implements EventsApi {
     @Autowired
     EventRepository eventRepository;
 
-    public ResponseEntity<Object> sendEvent(@ApiParam(value = "" ,required=true ) @RequestBody Event event) {
+    public ResponseEntity<Object> sendEvent(Event event) {
 
         // TODO: to do
         return null;

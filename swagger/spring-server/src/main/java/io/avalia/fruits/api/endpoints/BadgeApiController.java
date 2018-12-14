@@ -29,7 +29,7 @@ public class BadgeApiController implements BadgeApi {
     @Autowired
     BadgeRepository badgeRepository;
 
-    public ResponseEntity<Object> createBadge(@ApiParam(value = "" ,required=true ) @RequestBody Badge badge) {
+    public ResponseEntity<Object> createBadge( Badge badge) {
         BadgeEntity newBadgeEntity = toBadgeEntity(badge);
         badgeRepository.save(newBadgeEntity);
         Long id = newBadgeEntity.getId();
@@ -45,25 +45,23 @@ public class BadgeApiController implements BadgeApi {
         return ResponseEntity.created(location).build();
     }
 
-    public ResponseEntity<Object> deleteBadge(@ApiParam(value = "" ,required=true ) @RequestBody Badge badge){
+    public ResponseEntity<Object> deleteBadge(Badge badge){
 
         // TODO: to do
         return null;
     }
 
 
-    public ResponseEntity<Object> modifiyBadge(@ApiParam(value = "" ,required=true ) @RequestBody Badge badge){
-        // TODO: to do
-        return null;
-    }
-
-    public ResponseEntity<Badge> getBadge(@ApiParam(value = "" ,required=true ) @RequestHeader(value="appKey", required=true) Integer appKey,
-                                          @ApiParam(value = "",required=true ) @PathVariable("badgeName") String badgeName){
+    public ResponseEntity<Badge> getBadge(Integer appKey, String badgeName){
 
         //TODO: to do
         return null;
     }
 
+    @Override
+    public ResponseEntity<Object> modifiyBadge(Badge badge) {
+        return null;
+    }
 
 
     private BadgeEntity toBadgeEntity(Badge badge) {
