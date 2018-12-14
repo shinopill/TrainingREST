@@ -1,4 +1,4 @@
-Feature : PointScale
+Feature: PointScale
 
    Background:
       Given there is a gamification server
@@ -15,17 +15,17 @@ Feature : PointScale
       And response body should contain every PointScale data
 
    Scenario: Update user Points 
-      Given I have an API key, a username, a scalePoint payload and points
+      Given I have a username, a pointScale payload and points
       When I POST it to the /pointscale/update/userpoints
       Then I receive 200 status code
 
    Scenario: update scale points
-      Given I have an apiKey and a PointScale payload
+      Given I have a PointScale payload
       When I POST it to the /pointScale/update/scalePoints endpoint
       Then I receive a 200 status code
 
    Scenario: get userInfo
-      Given I have an API key and a username
+      Given I have pointScale payload and a username
       When I GET it to the /pointScale/user endpoint
       Then I receive a 200 status code
       And response body should contain user datas
