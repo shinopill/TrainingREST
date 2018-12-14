@@ -30,7 +30,61 @@ paths:
           description: already exist
           schema:
             type: object
+    put:
+      tags:
+        - "badges"
+      description: modify the "id" badge of the "id" app
+      operationId: modifiyBadge
+      consumes:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/badge'
+        - $ref: '#/parameters/badgeName'
+      responses:
+        '201':
+          description: modified
+          schema:
+            $ref: '#/definitions/Badge'
+    delete:
+      tags:
+        - "badges"
+      description: get the requested bage
+      operationId: deleteBadge
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/badge'
+      responses:
+        '200':
+          description: deleted
+          schema:
+            type: object
+        '400':
+          description: could not be found
+          schema:
+            type: object
 
+  /badge/{badgeName}:
+    get:
+      tags:
+        - "badges"
+      description: get the requested bage
+      operationId: getBadge
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/appKey'
+        - $ref: '#/parameters/badgeName'
+      responses:
+        '200':
+          description: success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Badge'
+
+
+  /badges:
     get:
       tags:
         - "badges"
@@ -47,26 +101,6 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Badge'
-
-  /badge/{badgeName}:
-    post:
-      tags:
-        - "badges"
-      description: modify the "id" badge of the "id" app
-      summary: "modify a badge"
-      operationId: modifiyBadge
-      consumes:
-        - application/json
-      parameters:
-        - $ref: '#/parameters/badge'
-        - $ref: '#/parameters/badgeName'
-      responses:
-        '201':
-          description: modified
-          schema:
-            $ref: '#/definitions/Badge'
-
-
 
   /pointScale:
     post:
