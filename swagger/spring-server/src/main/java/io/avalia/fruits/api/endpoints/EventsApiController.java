@@ -15,6 +15,7 @@ public class EventsApiController implements EventsApi {
     EventRepository eventRepository;
 
     public ResponseEntity<Object> sendEvent(@ApiParam(value = "" ,required=true ) @RequestBody Event event) {
+
         // TODO: to do
         return null;
     }
@@ -22,7 +23,7 @@ public class EventsApiController implements EventsApi {
     private EventEntity toEventEntity(Event event) {
         EventEntity entity = new EventEntity();
         entity.setAppKey(event.getAppKey());
-        entity.setRules(event.getRules());
+        entity.setRuleName(event.getRuleName());
         entity.setUsername(event.getUsername());
         return entity;
     }
@@ -30,7 +31,7 @@ public class EventsApiController implements EventsApi {
     private Event toEvent(EventEntity entity){
         Event event = new Event();
         event.setAppKey(entity.getAppKey());
-        event.setRules(entity.getRules());
+        event.setRuleName(entity.getRuleName());
         event.setUsername(entity.getUsername());
         return event;
     }

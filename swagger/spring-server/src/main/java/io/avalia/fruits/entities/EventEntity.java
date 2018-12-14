@@ -1,7 +1,5 @@
 package io.avalia.fruits.entities;
 
-import io.avalia.fruits.api.model.Rule;
-
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,7 +12,7 @@ public class EventEntity implements Serializable {
     private long id;
 
     private String username;
-    private Rule rule;
+    private String ruleName;
     private int appKey;
 
     public long getId() { return id; }
@@ -23,9 +21,9 @@ public class EventEntity implements Serializable {
 
     public void setUsername(String username) { this.username = username; }
 
-    public Rule getRules() { return rule; }
+    public String getRuleName() { return ruleName; }
 
-    public void setRules(Rule name){ this.rule = rule; }
+    public void setRuleName(String ruleName){ this.ruleName = ruleName; }
 
     public int getAppKey() { return appKey; }
 

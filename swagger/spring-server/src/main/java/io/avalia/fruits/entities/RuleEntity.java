@@ -17,9 +17,9 @@ public class RuleEntity implements Serializable {
     private String      name;
     private String      description;
     private int         appKey;
-    private Badge       badgeReward;
+    private String      badgeName;
     private int         pointReward;
-    private PointScale  pointScale;
+    private String      pointScaleName;
 
     public String getName() {
         return name;
@@ -45,12 +45,12 @@ public class RuleEntity implements Serializable {
         this.appKey = appKey;
     }
 
-    public Badge getBadgeReward() {
-        return badgeReward;
+    public String getBadgeName() {
+        return badgeName;
     }
 
-    public void setBadgeReward(Badge badgeReward) {
-        this.badgeReward = badgeReward;
+    public void setBadgeName(String badgeName) {
+        this.badgeName = badgeName;
     }
 
     public int getPointReward() {
@@ -61,8 +61,8 @@ public class RuleEntity implements Serializable {
         this.pointReward = pointReward;
     }
 
-    public PointScale getPointScale() { return pointScale; }
+    public String getPointScaleName() { return pointScaleName; }
 
-    public void setPointScale(PointScale pointScale) { this.pointScale = pointScale; }
+    public void setPointScaleName(String pointScaleName) { this.pointScaleName = pointScaleName; }
 
 }
