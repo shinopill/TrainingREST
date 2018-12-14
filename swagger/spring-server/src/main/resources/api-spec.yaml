@@ -44,11 +44,12 @@ paths:
         '201':
           description: modified
           schema:
-            $ref: '#/definitions/Badge'
+            type: boolean
+          
     delete:
       tags:
         - "badges"
-      description: get the requested bage
+      description: delete the requested bage
       operationId: deleteBadge
       produces:
         - application/json
@@ -79,9 +80,7 @@ paths:
         '200':
           description: success
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/Badge'
+            $ref: '#/definitions/Badge'
 
 
   /badges:
@@ -119,6 +118,24 @@ paths:
             type: object
         '400':
           description: already exist
+          schema:
+            type: object
+    put:
+      tags:
+        - "pointScales"
+      description: update a pointScale
+      operationId: updatePointScale
+      consumes:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/pointScale'
+      responses:
+        '201':
+          description: created
+          schema:
+            type: object
+        '400':
+          description: failed to update the pointScale
           schema:
             type: object
 
