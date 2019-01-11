@@ -31,6 +31,64 @@ paths:
           schema:
             type: object
 
+    delete:
+      tags:
+        - "badges"
+      description: delete the requested bage
+      operationId: deleteBadge
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/badge'
+      responses:
+        '200':
+          description: deleted
+          schema:
+            type: object
+        '400':
+          description: could not be found
+          schema:
+            type: object
+
+  /badge/{badgeName}:
+    get:
+      tags:
+        - "badges"
+      description: get the requested bage
+      operationId: getBadge
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/appKey'
+        - $ref: '#/parameters/badgeName'
+      responses:
+        '200':
+          description: success
+          schema:
+            $ref: '#/definitions/Badge'
+        '404':
+          description: bagde not found
+          schema:
+            type: object
+
+    put:
+      tags:
+        - "badges"
+      description: modify the "id" badge of the "id" app
+      operationId: modifiyBadge
+      consumes:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/badge'
+        - $ref: '#/parameters/badgeName'
+        - $ref: '#/parameters/appKey'
+      responses:
+        '201':
+          description: modified
+          schema:
+            type: object
+
+  /badges:
     get:
       tags:
         - "badges"
@@ -47,26 +105,6 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Badge'
-
-  /badge/{badgeName}:
-    post:
-      tags:
-        - "badges"
-      description: modify the "id" badge of the "id" app
-      summary: "modify a badge"
-      operationId: modifiyBadge
-      consumes:
-        - application/json
-      parameters:
-        - $ref: '#/parameters/badge'
-        - $ref: '#/parameters/badgeName'
-      responses:
-        '201':
-          description: modified
-          schema:
-            $ref: '#/definitions/Badge'
-
-
 
   /pointScale:
     post:
@@ -87,6 +125,63 @@ paths:
           description: already exist
           schema:
             type: object
+    put:
+      tags:
+        - "pointScales"
+      description: update a pointScale
+      operationId: updatePointScale
+      consumes:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/pointScale'
+      responses:
+        '201':
+          description: created
+          schema:
+            type: object
+        '400':
+          description: failed to update the pointScale
+          schema:
+            type: object
+    delete:
+      tags:
+        - "pointScales"
+      description: delete a pointScale
+      operationId: deletePointScale
+      consumes:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/pointScale'
+      responses:
+        '201':
+          description: deleted
+          schema:
+            type: object
+        '400':
+          description: failed to delete the pointScale
+          schema:
+            type: object
+
+  /pointScales/{pointScaleName}:
+    get:
+      tags:
+        - "pointScales"
+      description: return the pointScale wanted
+      operationId: getPointScale
+      parameters:
+        - $ref: '#/parameters/pointScaleName'
+        - $ref: '#/parameters/appKey'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: success
+          schema:
+            $ref: '#/definitions/PointScale'
+        '404':
+          description: user not found
+          schema:
+            type: object
 
   /pointScales/{pointScaleName}/{username}:
     get:
@@ -105,6 +200,10 @@ paths:
           description: success
           schema:
             type: integer
+        '404':
+          description: user not found
+          schema:
+            type: object
 
   /pointScales/{pointScaleName}/users:
     get:
@@ -123,7 +222,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/Badge'
+              type: object
 
 
   /rule:
@@ -135,11 +234,7 @@ paths:
       consumes:
         - application/json
       parameters:
-        - in: body
-          name: rule
-          required: true
-          schema:
-            $ref: '#/definitions/Rule'
+        - $ref: '#/parameters/rule'
       responses:
         '201':
           description: created
@@ -149,6 +244,60 @@ paths:
           description: already exist
           schema:
             type: object
+    put:
+      tags:
+        - "rules"
+      description: update a rule for an app
+      operationId: updateRule
+      consumes:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/rule'
+      responses:
+        '201':
+          description: created
+          schema:
+            type: object
+        '400':
+          description: already exist
+          schema:
+            type: object
+    delete:
+      tags:
+        - "rules"
+      description: delete a rule for an app
+      operationId: deleteRule
+      consumes:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/rule'
+      responses:
+        '201':
+          description: delete
+          schema:
+            type: object
+        '400':
+          description: already exist
+          schema:
+            type: object
+
+  /rule/{ruleName}:
+    get:
+      tags:
+        - "rules"
+      description: get the wanted application rule
+      operationId: getRule
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/appKey'
+        - $ref: '#/parameters/ruleName'
+      responses:
+        '200':
+          description: success
+          schema:
+            $ref: '#/definitions/Rule'
+
 
   /rules:
     get:
@@ -167,6 +316,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Rule'
+
   /events:
     post:
       tags:
@@ -225,6 +375,20 @@ parameters:
     required: true
     type: string
 
+  rule:
+    name: rule
+    in: body
+    required: true
+    schema:
+      $ref: '#/definitions/Rule'
+
+  ruleName:
+    name: ruleName
+    in: path
+    required: true
+    type: string
+
+
 definitions:
   Badge:
     type: object
@@ -265,10 +429,10 @@ definitions:
         type: string
       points:
         type: integer
-      pointScale:
-        $ref: '#/definitions/PointScale'
-      badge:
-        $ref: '#/definitions/Badge'
+      pointScaleName:
+        type: string
+      badgeName:
+        type: string
     required:
       - appKey
       - name
@@ -282,8 +446,8 @@ definitions:
     properties:
       appKey:
         type: integer
-      rules:
-        $ref: '#/definitions/Rule'
+      ruleName:
+        type: string
       username:
         type: string
     required:
