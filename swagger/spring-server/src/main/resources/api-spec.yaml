@@ -30,20 +30,6 @@ paths:
           description: already exist
           schema:
             type: object
-    put:
-      tags:
-        - "badges"
-      description: modify the "id" badge of the "id" app
-      operationId: modifiyBadge
-      consumes:
-        - application/json
-      parameters:
-        - $ref: '#/parameters/badge'
-      responses:
-        '201':
-          description: modified
-          schema:
-            type: object
 
     delete:
       tags:
@@ -85,6 +71,22 @@ paths:
           schema:
             type: object
 
+    put:
+      tags:
+        - "badges"
+      description: modify the "id" badge of the "id" app
+      operationId: modifiyBadge
+      consumes:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/badge'
+        - $ref: '#/parameters/badgeName'
+        - $ref: '#/parameters/appKey'
+      responses:
+        '201':
+          description: modified
+          schema:
+            type: object
 
   /badges:
     get:
