@@ -29,40 +29,43 @@ public class BadgeApiController implements BadgeApi {
     @Autowired
     BadgeRepository badgeRepository;
 
-    public ResponseEntity<Object> createBadge( Badge badge) {
-        BadgeEntity newBadgeEntity = toBadgeEntity(badge);
-        badgeRepository.save(newBadgeEntity);
-        Long id = newBadgeEntity.getId();
+    public ResponseEntity<Object> createBadge(Badge badge) {
+        Badge res = getBadge(badge.getAppKey(), badge.getName()).getBody();
+        if(res == null) {
+            BadgeEntity newBadgeEntity = toBadgeEntity(badge);
+            badgeRepository.save(newBadgeEntity);
+            Long id = newBadgeEntity.getId();
 
-        // TODO: check si jamais c'est la bonne méthode car pas sur
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest().path("/{id}")
-                .buildAndExpand(newBadgeEntity.getId()).toUri();
+            URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newBadgeEntity.getId()).toUri();
 
-        // Old version
-        // URI location = ServletUriComponentsBuilder.getFromCurrentRequest().path("/{id}").buildeAndExpand(newBadgeEntity.getId()).toUri();
-
-        return ResponseEntity.created(location).build();
+            return ResponseEntity.created(location).build();
+        }else{
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     public ResponseEntity<Object> deleteBadge(Badge badge){
-
-        // TODO: to do
-        return null;
+        badgeRepository.deleteBadgeEntitiesByAppKeyAndName(badge.getAppKey(), badge.getName());
+        return ResponseEntity.accepted().build();
     }
 
 
     public ResponseEntity<Badge> getBadge(Integer appKey, String badgeName){
-
-        //TODO: to do
-        return null;
+        BadgeEntity res = badgeRepository.findBadgeEntitiesByAppKeyAndAndName(appKey, badgeName);
+        return ResponseEntity.ok(toBadge(res));
     }
 
     @Override
-    public ResponseEntity<Object> modifiyBadge(Badge badge) {
-        return null;
+    public ResponseEntity<Object> modifiyBadge(Badge badge, String badgeName, Integer appKey) {
+        Badge res = getBadge(appKey, badgeName).getBody();
+        if(res != null){
+            res.setName(badge.getName());
+            res.setDescription(badge.getDescription());
+            badgeRepository.save(toBadgeEntity(res));
+            return ResponseEntity.accepted().build();
+        }
+        return ResponseEntity.badRequest().build();
     }
-
 
     private BadgeEntity toBadgeEntity(Badge badge) {
         BadgeEntity entity = new BadgeEntity();
