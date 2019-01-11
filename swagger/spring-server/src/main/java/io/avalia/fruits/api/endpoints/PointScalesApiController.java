@@ -18,16 +18,19 @@ public class PointScalesApiController implements PointScalesApi {
 
     @Override
     public ResponseEntity<List<Object>> getAllUsersFromPointScale(Integer appKey, String pointScaleName) {
+        // TODO: to do
         return null;
     }
 
     @Override
     public ResponseEntity<PointScale> getPointScale(String pointScaleName, Integer appKey) {
+        // TODO: to do
         return null;
     }
 
     @Override
     public ResponseEntity<Integer> getPoints(String pointScaleName, Integer appKey, String username) {
+        //TODO: to do
         return null;
     }
 }
