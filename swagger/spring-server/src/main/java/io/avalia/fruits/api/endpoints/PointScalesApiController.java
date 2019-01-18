@@ -24,13 +24,18 @@ public class PointScalesApiController implements PointScalesApi {
 
     @Override
     public ResponseEntity<PointScale> getPointScale(String pointScaleName, Integer appKey) {
-        pointScaleRepository.
         return null;
     }
 
     @Override
     public ResponseEntity<Integer> getPoints(String pointScaleName, Integer appKey, String username) {
         //TODO: to do
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<Object> updatePointScale(Integer appKey, String pointScaleName, PointScale pointScale) {
+        //TODO to do
         return null;
     }
 
