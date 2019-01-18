@@ -24,13 +24,13 @@ public class PointScaleApiController implements PointScaleApi {
 
     @Override
     public ResponseEntity<Object> deletePointScale(PointScale pointScale) {
+        PointScaleEntity pointScaleEntity = toPointScaleEntity(pointScale);
+        pointScaleRepository.findAll();
+
         return null;
     }
 
-    @Override
-    public ResponseEntity<Object> updatePointScale(PointScale pointScale) {
-        return null;
-    }
+
 
     private PointScaleEntity toPointScaleEntity(PointScale pointScale) {
         PointScaleEntity entity = new PointScaleEntity();

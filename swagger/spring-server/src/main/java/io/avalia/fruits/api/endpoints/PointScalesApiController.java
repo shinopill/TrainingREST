@@ -33,4 +33,10 @@ public class PointScalesApiController implements PointScalesApi {
         //TODO: to do
         return null;
     }
+
+    @Override
+    public ResponseEntity<Object> updatePointScale(Integer appKey, String pointScaleName, PointScale pointScale) {
+        //TODO to do
+        return null;
+    }
 }

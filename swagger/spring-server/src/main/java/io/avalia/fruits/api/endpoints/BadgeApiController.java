@@ -24,8 +24,6 @@ import java.util.List;
 @Controller
 public class BadgeApiController implements BadgeApi {
 
-    // TODO: utiliser la appId pour récupérer les badges seulement de l'app voulue
-
     @Autowired
     BadgeRepository badgeRepository;
 
