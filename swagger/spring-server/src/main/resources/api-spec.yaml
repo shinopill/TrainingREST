@@ -125,24 +125,7 @@ paths:
           description: already exist
           schema:
             type: object
-    put:
-      tags:
-        - "pointScales"
-      description: update a pointScale
-      operationId: updatePointScale
-      consumes:
-        - application/json
-      parameters:
-        - $ref: '#/parameters/pointScale'
-      responses:
-        '201':
-          description: created
-          schema:
-            type: object
-        '400':
-          description: failed to update the pointScale
-          schema:
-            type: object
+
     delete:
       tags:
         - "pointScales"
@@ -180,6 +163,27 @@ paths:
             $ref: '#/definitions/PointScale'
         '404':
           description: user not found
+          schema:
+            type: object
+
+    put:
+      tags:
+        - "pointScales"
+      description: update a pointScale
+      operationId: updatePointScale
+      consumes:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/appKey'
+        - $ref: '#/parameters/pointScaleName'
+        - $ref: '#/parameters/pointScale'
+      responses:
+        '201':
+          description: created
+          schema:
+            type: object
+        '400':
+          description: failed to update the pointScale
           schema:
             type: object
 
@@ -244,24 +248,7 @@ paths:
           description: already exist
           schema:
             type: object
-    put:
-      tags:
-        - "rules"
-      description: update a rule for an app
-      operationId: updateRule
-      consumes:
-        - application/json
-      parameters:
-        - $ref: '#/parameters/rule'
-      responses:
-        '201':
-          description: created
-          schema:
-            type: object
-        '400':
-          description: already exist
-          schema:
-            type: object
+
     delete:
       tags:
         - "rules"
@@ -297,6 +284,27 @@ paths:
           description: success
           schema:
             $ref: '#/definitions/Rule'
+
+    put:
+      tags:
+        - "rules"
+      description: update a rule for an app
+      operationId: updateRule
+      consumes:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/appKey'
+        - $ref: '#/parameters/ruleName'
+        - $ref: '#/parameters/rule'
+      responses:
+        '201':
+          description: created
+          schema:
+            type: object
+        '400':
+          description: already exist
+          schema:
+            type: object
 
 
   /rules:

@@ -7,8 +7,6 @@ import io.avalia.fruits.repositories.PointScaleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
-
-//TODO all
 public class PointScaleApiController implements PointScaleApi {
 
     @Autowired
@@ -16,20 +14,24 @@ public class PointScaleApiController implements PointScaleApi {
 
     @Override
     public ResponseEntity<Object> createPointScale(PointScale pointScale) {
-        PointScaleEntity pointScaleEntity = toPointScaleEntity(pointScale);
-        pointScaleRepository.save(pointScaleEntity);
+        PointScale res = toPointScale(pointScaleRepository.findByNameAAndAppKey(pointScale.getName(), pointScale.getAppKey()));
+        if (res == null) {
+            PointScaleEntity newPointScale = toPointScaleEntity(pointScale);
+            pointScaleRepository.save(newPointScale);
 
-        return null;
+            return ResponseEntity.accepted().build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @Override
     public ResponseEntity<Object> deletePointScale(PointScale pointScale) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity<Object> updatePointScale(PointScale pointScale) {
-        return null;
+        PointScaleEntity res = pointScaleRepository.deleteByNameAndAppKey(pointScale.getName(), pointScale.getAppKey());
+        if (res != null) {
+            return ResponseEntity.accepted().build();
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     private PointScaleEntity toPointScaleEntity(PointScale pointScale) {

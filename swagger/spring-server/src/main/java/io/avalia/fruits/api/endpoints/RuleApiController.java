@@ -18,9 +18,9 @@ public class RuleApiController implements RuleApi {
     @Autowired
     RuleRepository ruleRepository;
 
-    public ResponseEntity<Object> createRule(Rule rule) {
-
+    public ResponseEntity<Object> createRule(Rule rule){
         // TODO: to do
+
         return null;
     }
 
@@ -36,9 +36,9 @@ public class RuleApiController implements RuleApi {
         return null;
     }
 
-    public ResponseEntity<Object> updateRule(Rule rule) {
-
-        //TODO: to do
+    @Override
+    public ResponseEntity<Object> updateRule(Integer appKey, String ruleName, Rule rule) {
+        //Todo: to do
         return null;
     }
 
