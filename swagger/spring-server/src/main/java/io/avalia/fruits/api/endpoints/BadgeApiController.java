@@ -17,11 +17,9 @@ public class BadgeApiController implements BadgeApi {
     BadgeRepository badgeRepository;
 
     public ResponseEntity<Object> createBadge(Badge badge) {
-        Badge res = getBadge(badge.getAppKey(), badge.getName()).getBody();
-        if (res == null) {
-            BadgeEntity newBadgeEntity = toBadgeEntity(badge);
+        BadgeEntity newBadgeEntity = badgeRepository.findBadgeEntitiesByNameAndAppKey(badge.getName(), badge.getAppKey());
+        if (newBadgeEntity == null) {
             badgeRepository.save(newBadgeEntity);
-
             return ResponseEntity.accepted().build();
         } else {
             return ResponseEntity.badRequest().build();
@@ -29,7 +27,7 @@ public class BadgeApiController implements BadgeApi {
     }
 
     public ResponseEntity<Object> deleteBadge(Badge badge) {
-        BadgeEntity res = badgeRepository.deleteBadgeEntitiesByAppKeyAndName(badge.getAppKey(), badge.getName());
+        BadgeEntity res = badgeRepository.deleteBadgeEntitiesByAppKeyAndName(badge.getName(), badge.getAppKey());
         if (res != null) {
             return ResponseEntity.accepted().build();
         } else {
@@ -39,13 +37,13 @@ public class BadgeApiController implements BadgeApi {
 
 
     public ResponseEntity<Badge> getBadge(Integer appKey, String badgeName) {
-        BadgeEntity res = badgeRepository.findBadgeEntitiesByAppKeyAndName(appKey, badgeName);
+        BadgeEntity res = badgeRepository.findBadgeEntitiesByNameAndAppKey(badgeName, appKey);
         return ResponseEntity.ok(toBadge(res));
     }
 
     @Override
     public ResponseEntity<Object> modifiyBadge(Badge badge, String badgeName, Integer appKey) {
-        BadgeEntity res = badgeRepository.deleteBadgeEntitiesByAppKeyAndName(appKey, badgeName);
+        BadgeEntity res = badgeRepository.deleteBadgeEntitiesByAppKeyAndName(badgeName, appKey);
         if (res != null) {
             badgeRepository.save(toBadgeEntity(badge));
             return ResponseEntity.ok().build();

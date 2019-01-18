@@ -4,12 +4,8 @@ import io.avalia.fruits.api.RuleApi;
 import io.avalia.fruits.api.model.Rule;
 import io.avalia.fruits.entities.RuleEntity;
 import io.avalia.fruits.repositories.RuleRepository;
-import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-07-26T19:36:34.802Z")
 
@@ -18,31 +14,40 @@ public class RuleApiController implements RuleApi {
     @Autowired
     RuleRepository ruleRepository;
 
-    public ResponseEntity<Object> createRule(Rule rule){
-        // TODO: to do
-
-        return null;
+    public ResponseEntity<Object> createRule(Rule rule) {
+        RuleEntity newRuleEntity = ruleRepository.findByNameAndAppKey(rule.getName(), rule.getAppKey());
+        if (newRuleEntity == null) {
+            ruleRepository.save(newRuleEntity);
+            return ResponseEntity.accepted().build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     public ResponseEntity<Object> deleteRule(Rule rule) {
-
-        //TODO: to do
-        return null;
+        RuleEntity res = ruleRepository.deleteRuleEntityByNameAndAppKey(rule.getName(), rule.getAppKey());
+        if (res != null) {
+            return ResponseEntity.accepted().build();
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     public ResponseEntity<Rule> getRule(Integer appKey, String ruleName) {
-
-        //TODO: to do
-        return null;
+        RuleEntity res = ruleRepository.findByNameAndAppKey(ruleName, appKey);
+        return ResponseEntity.ok(toRule(res));
     }
 
     @Override
     public ResponseEntity<Object> updateRule(Integer appKey, String ruleName, Rule rule) {
-        //Todo: to do
-        return null;
+        RuleEntity res = ruleRepository.deleteRuleEntityByNameAndAppKey(ruleName, appKey);
+        if(res != null){
+            ruleRepository.save(toRuleEntity(rule));
+            return ResponseEntity.accepted().build();
+        }
+        return ResponseEntity.badRequest().build();
     }
 
-    private RuleEntity toRuleEntity(Rule rule){
+    private RuleEntity toRuleEntity(Rule rule) {
         RuleEntity entity = new RuleEntity();
         entity.setName(rule.getName());
         entity.setDescription(rule.getDescription());
@@ -53,7 +58,7 @@ public class RuleApiController implements RuleApi {
         return entity;
     }
 
-    private Rule toRule(RuleEntity ruleEntity){
+    private Rule toRule(RuleEntity ruleEntity) {
         Rule rule = new Rule();
         rule.setAppKey(ruleEntity.getAppKey());
         rule.setName(ruleEntity.getName());

@@ -14,11 +14,9 @@ public class PointScaleApiController implements PointScaleApi {
 
     @Override
     public ResponseEntity<Object> createPointScale(PointScale pointScale) {
-        PointScale res = toPointScale(pointScaleRepository.findByNameAAndAppKey(pointScale.getName(), pointScale.getAppKey()));
-        if (res == null) {
-            PointScaleEntity newPointScale = toPointScaleEntity(pointScale);
-            pointScaleRepository.save(newPointScale);
-
+        PointScaleEntity newPointScaleEntity = pointScaleRepository.findByNameAndAppKey(pointScale.getName(), pointScale.getAppKey());
+        if (newPointScaleEntity != null) {
+            pointScaleRepository.save(newPointScaleEntity);
             return ResponseEntity.accepted().build();
         } else {
             return ResponseEntity.badRequest().build();
@@ -27,7 +25,7 @@ public class PointScaleApiController implements PointScaleApi {
 
     @Override
     public ResponseEntity<Object> deletePointScale(PointScale pointScale) {
-        PointScaleEntity res = pointScaleRepository.deleteByNameAndAppKey(pointScale.getName(), pointScale.getAppKey());
+        PointScaleEntity res = pointScaleRepository.deletePointScaleEntitiesByNameAndAppKey(pointScale.getName(), pointScale.getAppKey());
         if (res != null) {
             return ResponseEntity.accepted().build();
         }
