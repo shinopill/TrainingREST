@@ -18,15 +18,14 @@ import java.util.List;
 @Controller
 public class BadgesApiController implements BadgesApi {
 
-    // TODO: utiliser la appId pour récupérer les badges seulement de l'app voulue
-
     @Autowired
     BadgeRepository badgeRepository;
 
     public ResponseEntity<List<Badge>> getBadges(Integer appKey) {
-        List<Badge> badges = new ArrayList<>();
-        for (BadgeEntity badgeEntity : badgeRepository.findAll()) {
-            badges.add(toBadge(badgeEntity));
+        List<BadgeEntity> badgesEntity = badgeRepository.findAllByAppKey(appKey);
+        List<Badge> badges = new ArrayList();
+        for(BadgeEntity entity : badgesEntity){
+            badges.add(toBadge(entity));
         }
 
         return ResponseEntity.ok(badges);

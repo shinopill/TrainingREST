@@ -24,7 +24,7 @@ public class PointScalesApiController implements PointScalesApi {
 
     @Override
     public ResponseEntity<PointScale> getPointScale(String pointScaleName, Integer appKey) {
-        // TODO: to do
+        pointScaleRepository.
         return null;
     }
 
@@ -32,5 +32,21 @@ public class PointScalesApiController implements PointScalesApi {
     public ResponseEntity<Integer> getPoints(String pointScaleName, Integer appKey, String username) {
         //TODO: to do
         return null;
+    }
+
+    private PointScaleEntity toPointScaleEntity(PointScale pointScale) {
+        PointScaleEntity entity = new PointScaleEntity();
+        entity.setName(pointScale.getName());
+        entity.setDescription(pointScale.getDescription());
+        entity.setAppKey(pointScale.getAppKey());
+        return entity;
+    }
+
+    private PointScale toPointScale(PointScaleEntity entity) {
+        PointScale pointScale = new PointScale();
+        pointScale.setName(entity.getName());
+        pointScale.setDescription(entity.getDescription());
+        pointScale.setAppKey(entity.getAppKey());
+        return pointScale;
     }
 }

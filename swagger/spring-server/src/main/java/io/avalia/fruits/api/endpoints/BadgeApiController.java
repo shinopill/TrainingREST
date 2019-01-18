@@ -24,8 +24,6 @@ import java.util.List;
 @Controller
 public class BadgeApiController implements BadgeApi {
 
-    // TODO: utiliser la appId pour récupérer les badges seulement de l'app voulue
-
     @Autowired
     BadgeRepository badgeRepository;
 
@@ -51,7 +49,7 @@ public class BadgeApiController implements BadgeApi {
 
 
     public ResponseEntity<Badge> getBadge(Integer appKey, String badgeName){
-        BadgeEntity res = badgeRepository.findBadgeEntitiesByAppKeyAndAndName(appKey, badgeName);
+        BadgeEntity res = badgeRepository.findBadgeEntitiesByAppKeyAndName(appKey, badgeName);
         return ResponseEntity.ok(toBadge(res));
     }
 
@@ -59,6 +57,7 @@ public class BadgeApiController implements BadgeApi {
     public ResponseEntity<Object> modifiyBadge(Badge badge, String badgeName, Integer appKey) {
         Badge res = getBadge(appKey, badgeName).getBody();
         if(res != null){
+            // TODO: voir si ca marche. Ce ca ne marche pas, on peut essayer de supprimer l'ancien et mettre un nouveau
             res.setName(badge.getName());
             res.setDescription(badge.getDescription());
             badgeRepository.save(toBadgeEntity(res));
