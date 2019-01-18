@@ -1,23 +1,12 @@
 package io.avalia.fruits.api.endpoints;
 
 import io.avalia.fruits.api.BadgeApi;
-import io.avalia.fruits.entities.BadgeEntity;
 import io.avalia.fruits.api.model.Badge;
+import io.avalia.fruits.entities.BadgeEntity;
 import io.avalia.fruits.repositories.BadgeRepository;
-import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import javax.validation.Valid;
-import javax.websocket.server.PathParam;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-07-26T19:36:34.802Z")
 
@@ -29,39 +18,37 @@ public class BadgeApiController implements BadgeApi {
 
     public ResponseEntity<Object> createBadge(Badge badge) {
         Badge res = getBadge(badge.getAppKey(), badge.getName()).getBody();
-        if(res == null) {
+        if (res == null) {
             BadgeEntity newBadgeEntity = toBadgeEntity(badge);
             badgeRepository.save(newBadgeEntity);
-            Long id = newBadgeEntity.getId();
 
-            URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newBadgeEntity.getId()).toUri();
-
-            return ResponseEntity.created(location).build();
-        }else{
+            return ResponseEntity.accepted().build();
+        } else {
             return ResponseEntity.badRequest().build();
         }
     }
 
-    public ResponseEntity<Object> deleteBadge(Badge badge){
-        badgeRepository.deleteBadgeEntitiesByAppKeyAndName(badge.getAppKey(), badge.getName());
-        return ResponseEntity.accepted().build();
+    public ResponseEntity<Object> deleteBadge(Badge badge) {
+        BadgeEntity res = badgeRepository.deleteBadgeEntitiesByAppKeyAndName(badge.getAppKey(), badge.getName());
+        if (res != null) {
+            return ResponseEntity.accepted().build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
 
-    public ResponseEntity<Badge> getBadge(Integer appKey, String badgeName){
+    public ResponseEntity<Badge> getBadge(Integer appKey, String badgeName) {
         BadgeEntity res = badgeRepository.findBadgeEntitiesByAppKeyAndName(appKey, badgeName);
         return ResponseEntity.ok(toBadge(res));
     }
 
     @Override
     public ResponseEntity<Object> modifiyBadge(Badge badge, String badgeName, Integer appKey) {
-        Badge res = getBadge(appKey, badgeName).getBody();
-        if(res != null){
-            // TODO: voir si ca marche. Ce ca ne marche pas, on peut essayer de supprimer l'ancien et mettre un nouveau
-            res.setName(badge.getName());
-            res.setDescription(badge.getDescription());
-            badgeRepository.save(toBadgeEntity(res));
-            return ResponseEntity.accepted().build();
+        BadgeEntity res = badgeRepository.deleteBadgeEntitiesByAppKeyAndName(appKey, badgeName);
+        if (res != null) {
+            badgeRepository.save(toBadgeEntity(badge));
+            return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();
     }
