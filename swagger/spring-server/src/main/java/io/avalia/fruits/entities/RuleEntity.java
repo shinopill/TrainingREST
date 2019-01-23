@@ -16,28 +16,17 @@ public class RuleEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String name;
-    private String description;
     private int appKey;
-
-    private BadgeEntity badge;
+    private String name;
+    private String eventType;
+    private int numberOfTimesToGetTheAward;
+    private String description;
+    private int points;
     private PointScaleEntity pointScale;
-    private int pointReward;
+    private BadgeEntity badge;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public long getId() {
+        return id;
     }
 
     public int getAppKey() {
@@ -48,13 +37,44 @@ public class RuleEntity implements Serializable {
         this.appKey = appKey;
     }
 
-
-    public BadgeEntity getBadge() {
-        return badge;
+    public String getName() {
+        return name;
     }
 
-    public void setBadge(BadgeEntity badge) {
-        this.badge = badge;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEventType() {
+        return eventType;
+    }
+
+    public void setEventType(String eventType) {
+        this.eventType = eventType;
+    }
+
+    public int getNumberOfTimesToGetTheAward() {
+        return numberOfTimesToGetTheAward;
+    }
+
+    public void setNumberOfTimesToGetTheAward(int numberOfTimesToGetTheAward) {
+        this.numberOfTimesToGetTheAward = numberOfTimesToGetTheAward;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
     }
 
     public PointScaleEntity getPointScale() {
@@ -65,12 +85,12 @@ public class RuleEntity implements Serializable {
         this.pointScale = pointScale;
     }
 
-    public int getPointReward() {
-        return pointReward;
+    public BadgeEntity getBadge() {
+        return badge;
     }
 
-    public void setPointReward(int pointReward) {
-        this.pointReward = pointReward;
+    public void setBadge(BadgeEntity badge) {
+        this.badge = badge;
     }
 }
 
