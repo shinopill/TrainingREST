@@ -19,24 +19,4 @@ public class EventsApiController implements EventsApi {
         // TODO: to do
         return null;
     }
-
-    private EventEntity toEventEntity(Event event) {
-        EventEntity entity = new EventEntity();
-        entity.setAppKey(event.getAppKey());
-        entity.setEventType(event.getEventType());
-        entity.setTimestamp(event.getTimestamp());
-        entity.setProperties(event.getProperties());
-        entity.setUsername(event.getUsername());
-        return entity;
-    }
-
-    private Event toEvent(EventEntity entity){
-        Event event = new Event();
-        event.setAppKey(entity.getAppKey());
-        event.setEventType(entity.getEventType());
-        event.setProperties(entity.getProperties());
-        event.setTimestamp(entity.getTimestamp());
-        event.setUsername(entity.getUsername());
-        return event;
-    }
 }
