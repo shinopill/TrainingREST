@@ -420,8 +420,8 @@ definitions:
         type: string
       points:
         type: integer
-      pointScaleName:
-        type: string
+      pointScale:
+        $ref: '#/definitions/Rule'
       badge:
         $ref: '#/definitions/Badge'
     required:
