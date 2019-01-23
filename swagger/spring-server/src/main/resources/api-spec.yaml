@@ -302,9 +302,11 @@ paths:
         '200':
           description: list of all users
           schema:
-            type: object
+          type: array
+          items:
+            $ref: '#/definitions/User'
 
-  /users/{username]:
+  /users/{username}:
     get:
       tags:
         - "users"
@@ -319,8 +321,7 @@ paths:
         '200':
           description: user returned
           schema:
-            type: object
-
+            $ref: '#/definitions/User'
 
 parameters:
   badge:
@@ -419,8 +420,8 @@ definitions:
         type: string
       points:
         type: integer
-      pointScale:
-        $ref: '#/definitions/PointScale'
+      pointScaleName:
+        type: string
       badge:
         $ref: '#/definitions/Badge'
     required:
@@ -434,8 +435,8 @@ definitions:
   Event:
     type: object
     properties:
-      username:
-        type: string
+      userId:
+        type: integer
       timestamp:
         type: string
       eventType:
@@ -449,10 +450,8 @@ definitions:
 
     required:
       - appKey
-      - timestamp
+      - rules
       - username
-      - eventType
-      - properties
 
   User:
     type: object
