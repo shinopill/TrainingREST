@@ -264,7 +264,6 @@ paths:
           schema:
             type: object
 
-
   /users:
     get:
       tags:
@@ -300,29 +299,27 @@ paths:
           schema:
             $ref: '#/definitions/User'
 
-  /users/{username}/points:
-    get:
-      tags:
-        - "users"
-      description: return the points the user have
-      operationId: getPoints
-      parameters:
-        - $ref: '#/parameters/pointScaleName'
-        - $ref: '#/parameters/appKey'
-        - $ref: '#/parameters/username'
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: success
-          schema:
-            type: integer
-        '404':
-          description: user not found
-          schema:
-            type: object
-
-
+  /users/{username}/{pointScaleName}:
+      get:
+        tags:
+          - "points"
+        description: return the points the user have
+        operationId: getPoints
+        parameters:
+          - $ref: '#/parameters/pointScaleName'
+          - $ref: '#/parameters/appKey'
+          - $ref: '#/parameters/username'
+        produces:
+          - application/json
+        responses:
+          '200':
+            description: success
+            schema:
+              type: integer
+          '404':
+            description: user not found
+            schema:
+              type: object
 
 parameters:
   badge:

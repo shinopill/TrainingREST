@@ -1,9 +1,6 @@
 package io.avalia.fruits.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
@@ -17,6 +14,8 @@ public class EventEntity implements Serializable {
     private String username;
     private String timestamp;
     private String eventType;
+
+    @ElementCollection
     private List<String> properties;
     private int appKey;
 

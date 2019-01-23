@@ -1,4 +1,7 @@
 package io.avalia.fruits.repositories;
 
-public class ApplicationRepository {
+import io.avalia.fruits.entities.ApplicationEntity;
+import org.springframework.data.repository.CrudRepository;
+
+interface ApplicationRepository extends CrudRepository<ApplicationEntity, Long> {
 }
