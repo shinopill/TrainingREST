@@ -460,14 +460,10 @@ definitions:
         type: string
       appkey:
         type: integer
-      pointScales:
+      pointScalesWithPoints:
         type: array
         items:
-          $ref: '#/definitions/PointScale'
-      pointScalesPoints:
-        type: array
-        items:
-          type: integer
+          $ref: '#/definitions/PointScaleWithPoints'
       badgesArray:
         type: array
         items:
@@ -483,9 +479,9 @@ definitions:
     type: object
     properties:
       pointScale:
-          $ref : '#/definitions/PointScale'
+        $ref : '#/definitions/PointScale'
       points:
-          type: integer
+        type: integer
     required:
       - pointScale
       - points
