@@ -421,7 +421,7 @@ definitions:
       points:
         type: integer
       pointScale:
-        $ref: '#/definitions/Rule'
+        $ref: '#/definitions/PointScale'
       badge:
         $ref: '#/definitions/Badge'
     required:
@@ -435,8 +435,8 @@ definitions:
   Event:
     type: object
     properties:
-      userId:
-        type: integer
+      username:
+        type: string
       timestamp:
         type: string
       eventType:
@@ -463,7 +463,7 @@ definitions:
       pointScales:
         type: array
         items:
-          type: string
+          $ref: '#/definitions/PointScale'
       pointScalesPoints:
         type: array
         items:
@@ -471,11 +471,21 @@ definitions:
       badgesArray:
         type: array
         items:
-          type: string
-
+          $ref: '#/definitions/Badge'
     required:
       - appKey
       - userId
       - pointScalesArray
       - pointScatesPoints
       - bagdesArray
+
+  PointScaleWithPoints:
+    type: object
+    properties:
+      pointScale:
+        $ref : '#/definitions/PointScale'
+      points:
+        type: integer
+    required:
+      - pointScale
+      - points
