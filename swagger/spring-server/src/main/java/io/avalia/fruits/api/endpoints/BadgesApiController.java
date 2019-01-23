@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestHeader;
 
+import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class BadgesApiController implements BadgesApi {
     @Autowired
     BadgeRepository badgeRepository;
 
+    @Override
     public ResponseEntity<List<Badge>> getBadges(Integer appKey) {
         List<BadgeEntity> badgesEntity = badgeRepository.findAllByAppKey(appKey);
         List<Badge> badges = new ArrayList();
@@ -29,6 +31,37 @@ public class BadgesApiController implements BadgesApi {
         }
 
         return ResponseEntity.ok(badges);
+    }
+
+
+    @Override
+    public ResponseEntity<Object> createBadge(Badge badge) {
+        Badge res = getBadge(badge.getAppKey(), badge.getName()).getBody();
+        if (res == null) {
+            BadgeEntity newBadgeEntity = toBadgeEntity(badge);
+            badgeRepository.save(newBadgeEntity);
+
+            return ResponseEntity.accepted().build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+
+    @Override
+    public ResponseEntity<Badge> getBadge(Integer appKey, String badgeName) {
+        BadgeEntity res = badgeRepository.findBadgeEntitiesByAppKeyAndName(appKey, badgeName);
+        return ResponseEntity.ok(toBadge(res));
+    }
+
+    @Override
+    public ResponseEntity<Object> modifiyBadge(Badge badge, String badgeName, Integer appKey) {
+        BadgeEntity res = badgeRepository.deleteBadgeEntitiesByAppKeyAndName(appKey, badgeName);
+        if (res != null) {
+            badgeRepository.save(toBadgeEntity(badge));
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().build();
     }
 
 

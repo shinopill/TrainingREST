@@ -1,10 +1,13 @@
 package io.avalia.fruits.entities;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
+import java.util.List;
 
+@Entity
 public class EventEntity implements Serializable {
 
     @Id
@@ -12,20 +15,58 @@ public class EventEntity implements Serializable {
     private long id;
 
     private String username;
-    private String ruleName;
+    private String timestamp;
+    private String eventType;
+    private List<String> properties;
     private int appKey;
 
-    public long getId() { return id; }
 
-    public String getUsername() { return username; }
+    public long getId() {
+        return id;
+    }
 
-    public void setUsername(String username) { this.username = username; }
+    public void setId(long id) {
+        this.id = id;
+    }
 
-    public String getRuleName() { return ruleName; }
+    public String getUsername() {
+        return username;
+    }
 
-    public void setRuleName(String ruleName){ this.ruleName = ruleName; }
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-    public int getAppKey() { return appKey; }
 
-    public void setAppKey(int appKey) { this.appKey = appKey; }
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public String getEventType() {
+        return eventType;
+    }
+
+    public void setEventType(String eventType) {
+        this.eventType = eventType;
+    }
+
+    public List<String> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(List<String> properties) {
+        this.properties = properties;
+    }
+
+    public int getAppKey() {
+        return appKey;
+    }
+
+    public void setAppKey(int appKey) {
+        this.appKey = appKey;
+    }
 }

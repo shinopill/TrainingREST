@@ -23,7 +23,9 @@ public class EventsApiController implements EventsApi {
     private EventEntity toEventEntity(Event event) {
         EventEntity entity = new EventEntity();
         entity.setAppKey(event.getAppKey());
-        entity.setRuleName(event.getRuleName());
+        entity.setEventType(event.getEventType());
+        entity.setTimestamp(event.getTimestamp());
+        entity.setProperties(event.getProperties());
         entity.setUsername(event.getUsername());
         return entity;
     }
@@ -31,7 +33,9 @@ public class EventsApiController implements EventsApi {
     private Event toEvent(EventEntity entity){
         Event event = new Event();
         event.setAppKey(entity.getAppKey());
-        event.setRuleName(entity.getRuleName());
+        event.setEventType(entity.getEventType());
+        event.setProperties(entity.getProperties());
+        event.setTimestamp(entity.getTimestamp());
         event.setUsername(entity.getUsername());
         return event;
     }

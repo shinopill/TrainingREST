@@ -14,11 +14,8 @@ public class PointScalesApiController implements PointScalesApi {
     @Autowired
     PointScaleRepository pointScaleRepository;
 
-    @Override
-    public ResponseEntity<List<Object>> getAllUsersFromPointScale(Integer appKey, String pointScaleName) {
-        // TODO: to do
-        return null;
-    }
+
+
 
     @Override
     public ResponseEntity<PointScale> getPointScale(String pointScaleName, Integer appKey) {
@@ -41,6 +38,22 @@ public class PointScalesApiController implements PointScalesApi {
         }
         return ResponseEntity.badRequest().build();
     }
+
+    @Override
+    public ResponseEntity<Object> createPointScale(PointScale pointScale) {
+        PointScale res = toPointScale(pointScaleRepository.findByNameAAndAppKey(pointScale.getName(), pointScale.getAppKey()));
+        if (res == null) {
+            PointScaleEntity newPointScale = toPointScaleEntity(pointScale);
+            pointScaleRepository.save(newPointScale);
+
+            return ResponseEntity.accepted().build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+
+
 
     private PointScaleEntity toPointScaleEntity(PointScale pointScale) {
         PointScaleEntity entity = new PointScaleEntity();

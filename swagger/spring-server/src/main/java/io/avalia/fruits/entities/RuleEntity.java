@@ -3,23 +3,26 @@ package io.avalia.fruits.entities;
 import io.avalia.fruits.api.model.Badge;
 import io.avalia.fruits.api.model.PointScale;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
 
+@Entity
 public class RuleEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String      name;
-    private String      description;
-    private int         appKey;
-    private String      badgeName;
-    private int         pointReward;
-    private String      pointScaleName;
+    private String name;
+    private String description;
+    private int appKey;
+
+    private BadgeEntity badge;
+    private PointScaleEntity pointScale;
+    private int pointReward;
 
     public String getName() {
         return name;
@@ -45,12 +48,21 @@ public class RuleEntity implements Serializable {
         this.appKey = appKey;
     }
 
-    public String getBadgeName() {
-        return badgeName;
+
+    public BadgeEntity getBadge() {
+        return badge;
     }
 
-    public void setBadgeName(String badgeName) {
-        this.badgeName = badgeName;
+    public void setBadge(BadgeEntity badge) {
+        this.badge = badge;
+    }
+
+    public PointScaleEntity getPointScale() {
+        return pointScale;
+    }
+
+    public void setPointScale(PointScaleEntity pointScale) {
+        this.pointScale = pointScale;
     }
 
     public int getPointReward() {
@@ -60,9 +72,5 @@ public class RuleEntity implements Serializable {
     public void setPointReward(int pointReward) {
         this.pointReward = pointReward;
     }
-
-    public String getPointScaleName() { return pointScaleName; }
-
-    public void setPointScaleName(String pointScaleName) { this.pointScaleName = pointScaleName; }
-
 }
+

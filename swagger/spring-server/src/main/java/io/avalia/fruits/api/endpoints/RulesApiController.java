@@ -19,9 +19,29 @@ public class RulesApiController implements RulesApi {
     @Autowired
     RuleRepository ruleRepository;
 
+    @Override
+    public ResponseEntity<Object> createRule(Rule rule) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<Object> deleteRule(Rule rule) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<Rule> getRule(Integer appKey, String ruleName) {
+        return null;
+    }
+
     public ResponseEntity<List<Rule>> getRules(Integer appKey) {
 
         // TODO: to do
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<Object> updateRule(Integer appKey, String ruleName, Rule rule) {
         return null;
     }
 
