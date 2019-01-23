@@ -419,10 +419,10 @@ definitions:
         type: string
       points:
         type: integer
-      pointScaleName:
-        type: string
-      badgeName:
-        type: string
+      pointScale:
+        $ref: '#/definitions/PointScale'
+      badge:
+        $ref: '#/definitions/Badge'
     required:
       - appKey
       - name

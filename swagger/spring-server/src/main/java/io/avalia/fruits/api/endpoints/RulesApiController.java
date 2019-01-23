@@ -1,7 +1,11 @@
 package io.avalia.fruits.api.endpoints;
 
 import io.avalia.fruits.api.RulesApi;
+import io.avalia.fruits.api.model.Badge;
+import io.avalia.fruits.api.model.PointScale;
 import io.avalia.fruits.api.model.Rule;
+import io.avalia.fruits.entities.BadgeEntity;
+import io.avalia.fruits.entities.PointScaleEntity;
 import io.avalia.fruits.entities.RuleEntity;
 import io.avalia.fruits.repositories.RuleRepository;
 import io.swagger.annotations.ApiParam;
@@ -45,14 +49,46 @@ public class RulesApiController implements RulesApi {
         return null;
     }
 
+    private PointScaleEntity toPointScaleEntity(PointScale pointScale) {
+        PointScaleEntity entity = new PointScaleEntity();
+        entity.setName(pointScale.getName());
+        entity.setDescription(pointScale.getDescription());
+        entity.setAppKey(pointScale.getAppKey());
+        return entity;
+    }
+
+    private PointScale toPointScale(PointScaleEntity entity) {
+        PointScale pointScale = new PointScale();
+        pointScale.setName(entity.getName());
+        pointScale.setDescription(entity.getDescription());
+        pointScale.setAppKey(entity.getAppKey());
+        return pointScale;
+    }
+
+    private BadgeEntity toBadgeEntity(Badge badge) {
+        BadgeEntity entity = new BadgeEntity();
+        entity.setName(badge.getName());
+        entity.setDescription(badge.getDescription());
+        entity.setAppKey(badge.getAppKey());
+        return entity;
+    }
+
+    private Badge toBadge(BadgeEntity entity) {
+        Badge badge = new Badge();
+        badge.setName(entity.getName());
+        badge.setDescription(entity.getDescription());
+        badge.setAppKey(entity.getAppKey());
+        return badge;
+    }
+
     private RuleEntity toRuleEntity(Rule rule){
         RuleEntity entity = new RuleEntity();
         entity.setName(rule.getName());
         entity.setDescription(rule.getDescription());
         entity.setAppKey(rule.getAppKey());
-        entity.setBadgeName(rule.getBadgeName());
+        entity.setBadge(toBadgeEntity(rule.getBadge()));
         entity.setPointReward(rule.getPoints());
-        entity.setPointScaleName(rule.getPointScaleName());
+        entity.setPointScale(toPointScaleEntity(rule.getPointScale()));
         return entity;
     }
 
@@ -62,8 +98,8 @@ public class RulesApiController implements RulesApi {
         rule.setName(ruleEntity.getName());
         rule.setDescription(ruleEntity.getDescription());
         rule.setPoints(ruleEntity.getPointReward());
-        rule.setPointScaleName(ruleEntity.getPointScaleName());
-        rule.setBadgeName(ruleEntity.getBadgeName());
+        rule.setPointScale(toPointScale(ruleEntity.getPointScale()));
+        rule.setBadge(toBadge(ruleEntity.getBadge()));
         return rule;
     }
 }

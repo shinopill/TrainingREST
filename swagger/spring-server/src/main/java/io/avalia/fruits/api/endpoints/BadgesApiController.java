@@ -33,7 +33,6 @@ public class BadgesApiController implements BadgesApi {
         return ResponseEntity.ok(badges);
     }
 
-
     @Override
     public ResponseEntity<Object> createBadge(Badge badge) {
         Badge res = getBadge(badge.getAppKey(), badge.getName()).getBody();
@@ -47,16 +46,15 @@ public class BadgesApiController implements BadgesApi {
         }
     }
 
-
     @Override
     public ResponseEntity<Badge> getBadge(Integer appKey, String badgeName) {
-        BadgeEntity res = badgeRepository.findBadgeEntitiesByAppKeyAndName(appKey, badgeName);
+        BadgeEntity res = badgeRepository.findBadgeEntitiesByNameAndAppKey(badgeName, appKey);
         return ResponseEntity.ok(toBadge(res));
     }
 
     @Override
     public ResponseEntity<Object> modifiyBadge(Badge badge, String badgeName, Integer appKey) {
-        BadgeEntity res = badgeRepository.deleteBadgeEntitiesByAppKeyAndName(appKey, badgeName);
+        BadgeEntity res = badgeRepository.deleteBadgeEntitiesByAppKeyAndName(badgeName, appKey);
         if (res != null) {
             badgeRepository.save(toBadgeEntity(badge));
             return ResponseEntity.ok().build();

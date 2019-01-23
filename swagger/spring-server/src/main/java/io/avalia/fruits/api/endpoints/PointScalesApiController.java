@@ -41,7 +41,7 @@ public class PointScalesApiController implements PointScalesApi {
 
     @Override
     public ResponseEntity<Object> createPointScale(PointScale pointScale) {
-        PointScale res = toPointScale(pointScaleRepository.findByNameAAndAppKey(pointScale.getName(), pointScale.getAppKey()));
+        PointScale res = toPointScale(pointScaleRepository.findByNameAndAppKey(pointScale.getName(), pointScale.getAppKey()));
         if (res == null) {
             PointScaleEntity newPointScale = toPointScaleEntity(pointScale);
             pointScaleRepository.save(newPointScale);
