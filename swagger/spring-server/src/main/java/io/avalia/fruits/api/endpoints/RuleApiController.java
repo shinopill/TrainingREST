@@ -47,7 +47,10 @@ public class RuleApiController implements RulesApi {
     @Override
     public ResponseEntity<Rule> getRule(Integer appKey, String ruleName) {
         RuleEntity res = ruleRepository.findRuleEntityByNameAndAppKey(ruleName, appKey);
-        return ResponseEntity.ok(tools.toRule(res));
+        if (res != null) {
+            return ResponseEntity.ok(tools.toRule(res));
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     public ResponseEntity<List<Rule>> getRules(Integer appKey) {
@@ -62,6 +65,6 @@ public class RuleApiController implements RulesApi {
 
     @Override
     public ResponseEntity<Object> updateRule(Integer appKey, String ruleName, Rule rule) {
-       return null; // TODO: todo
+        return null; // TODO: todo
     }
 }

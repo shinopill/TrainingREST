@@ -1,9 +1,9 @@
 package io.avalia.fruits.api.endpoints;
 
-
 import io.avalia.fruits.api.UsersApi;
 import io.avalia.fruits.api.model.User;
 import io.avalia.fruits.api.util.Tools;
+import io.avalia.fruits.entities.PointScaleWithPointsEntity;
 import io.avalia.fruits.entities.UserEntity;
 import io.avalia.fruits.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,18 +25,41 @@ public class UserApiController implements UsersApi {
     private Tools tools;
 
     @Override
-    public ResponseEntity<User> getUser(Integer appKey, String username){
+    public ResponseEntity<Integer> getPoints(String pointScaleName, Integer appKey, String username){
         UserEntity res = userRepository.findUserEntityByNameAndAppKey(username, appKey);
-        return ResponseEntity.ok(tools.toUser(res));
+        if(res!= null) {
+            List<PointScaleWithPointsEntity> pointScaleWithPointsEntities = res.getPointScaleWithPoints();
+            int points;
+
+            for (int i = 0; i < pointScaleWithPointsEntities.size(); ++i) {
+                if (pointScaleWithPointsEntities.get(i).getPointScaleEntity().getName() == pointScaleName) {
+                    points = pointScaleWithPointsEntities.get(i).getPoints();
+                    return ResponseEntity.ok(points);
+                }
+            }
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     @Override
-    public ResponseEntity<List<User>> getUsers(Integer appKey){
-        List<UserEntity> entities = userRepository.findAllUserEntityByAppKey(appKey);
-        List<User> users = new ArrayList<>();
-        for(UserEntity u : entities){
-            users.add(tools.toUser(u));
+    public ResponseEntity<User> getUser(Integer appKey, String username) {
+        UserEntity res = userRepository.findUserEntityByNameAndAppKey(username, appKey);
+        if (res != null) {
+            return ResponseEntity.ok(tools.toUser(res));
         }
-        return ResponseEntity.ok(users);
+        return ResponseEntity.badRequest().build();
+    }
+
+    @Override
+    public ResponseEntity<List<User>> getUsers(Integer appKey) {
+        List<UserEntity> entities = userRepository.findAllUserEntityByAppKey(appKey);
+        if (entities != null) {
+            List<User> users = new ArrayList<>();
+            for (UserEntity u : entities) {
+                users.add(tools.toUser(u));
+            }
+            return ResponseEntity.ok(users);
+        }
+        return ResponseEntity.badRequest().build();
     }
 }

@@ -1,9 +1,9 @@
 package io.avalia.fruits.api.endpoints;
 
 import io.avalia.fruits.api.BadgesApi;
+import io.avalia.fruits.api.model.Badge;
 import io.avalia.fruits.api.util.Tools;
 import io.avalia.fruits.entities.BadgeEntity;
-import io.avalia.fruits.api.model.Badge;
 import io.avalia.fruits.repositories.BadgeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,12 +25,15 @@ public class BadgeApiController implements BadgesApi {
     @Override
     public ResponseEntity<List<Badge>> getBadges(Integer appKey) {
         List<BadgeEntity> badgesEntity = badgeRepository.findAllByAppKey(appKey);
-        List<Badge> badges = new ArrayList();
-        for(BadgeEntity entity : badgesEntity){
-            badges.add(tools.toBadge(entity));
-        }
+        if (badgesEntity != null) {
+            List<Badge> badges = new ArrayList();
+            for (BadgeEntity entity : badgesEntity) {
+                badges.add(tools.toBadge(entity));
+            }
 
-        return ResponseEntity.ok(badges);
+            return ResponseEntity.ok(badges);
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     @Override
@@ -49,11 +52,14 @@ public class BadgeApiController implements BadgesApi {
     @Override
     public ResponseEntity<Badge> getBadge(Integer appKey, String badgeName) {
         BadgeEntity res = badgeRepository.findBadgeEntitiesByNameAndAppKey(badgeName, appKey);
-        return ResponseEntity.ok(tools.toBadge(res));
+        if (res != null) {
+            return ResponseEntity.ok(tools.toBadge(res));
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     @Override
     public ResponseEntity<Object> modifiyBadge(Badge badge, String badgeName, Integer appKey) {
-       return null; // TODO: todo
+        return null; // TODO: todo
     }
 }

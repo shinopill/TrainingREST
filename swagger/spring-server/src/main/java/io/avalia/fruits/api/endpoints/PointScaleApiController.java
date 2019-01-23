@@ -18,13 +18,10 @@ public class PointScaleApiController implements PointScalesApi {
     @Override
     public ResponseEntity<PointScale> getPointScale(String pointScaleName, Integer appKey) {
         PointScaleEntity res = pointScaleRepository.findByNameAndAppKey(pointScaleName, appKey);
-        return ResponseEntity.ok(tools.toPointScale(res));
-    }
-
-    @Override
-    public ResponseEntity<Integer> getPoints(String pointScaleName, Integer appKey, String username) {
-        //TODO: to do
-        return null;
+        if (res != null) {
+            return ResponseEntity.ok(tools.toPointScale(res));
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     @Override
