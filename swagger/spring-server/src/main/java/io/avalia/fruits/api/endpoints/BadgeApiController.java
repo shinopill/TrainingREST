@@ -6,6 +6,7 @@ import io.avalia.fruits.entities.BadgeEntity;
 import io.avalia.fruits.api.model.Badge;
 import io.avalia.fruits.repositories.BadgeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
@@ -20,7 +21,7 @@ public class BadgeApiController implements BadgesApi {
     @Autowired
     BadgeRepository badgeRepository;
 
-    private Tools tools;
+    private Tools tools = new Tools();
 
     @Override
     public ResponseEntity<List<Badge>> getBadges(Integer appKey) {
@@ -35,20 +36,24 @@ public class BadgeApiController implements BadgesApi {
 
     @Override
     public ResponseEntity<Object> createBadge(Badge badge) {
-        Badge res = getBadge(badge.getAppKey(), badge.getName()).getBody();
-        if (res == null) {
+        ResponseEntity<Badge> res = getBadge(badge.getAppKey(), badge.getName());
+        if (!res.hasBody()) {
             BadgeEntity newBadgeEntity = tools.toBadgeEntity(badge);
             badgeRepository.save(newBadgeEntity);
-
             return ResponseEntity.accepted().build();
-        } else {
-            return ResponseEntity.badRequest().build();
+       } else {
+             return ResponseEntity.badRequest().build();
         }
+
     }
 
     @Override
     public ResponseEntity<Badge> getBadge(Integer appKey, String badgeName) {
+
         BadgeEntity res = badgeRepository.findBadgeEntitiesByNameAndAppKey(badgeName, appKey);
+        if(res == null){
+            return ResponseEntity.badRequest().build();
+        }
         return ResponseEntity.ok(tools.toBadge(res));
     }
 

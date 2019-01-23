@@ -22,7 +22,7 @@ public class UserApiController implements UsersApi {
     @Autowired
     UserRepository userRepository;
 
-    private Tools tools;
+    private Tools tools = new Tools();
 
     @Override
     public ResponseEntity<User> getUser(Integer appKey, String username){
