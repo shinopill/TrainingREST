@@ -6,7 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface BadgeRepository extends CrudRepository<BadgeEntity, Long>{
-    BadgeEntity findBadgeEntitiesByAppKeyAndName(Integer appKey, String name);
-    BadgeEntity deleteBadgeEntitiesByAppKeyAndName(Integer appKey, String name);
+    BadgeEntity findBadgeEntitiesByNameAndAppKey(String badgeName, Integer appKey);
+    BadgeEntity deleteBadgeEntitiesByAppKeyAndName(String badgeName, Integer appKey);
     List<BadgeEntity> findAllByAppKey(Integer appKey);
 }
