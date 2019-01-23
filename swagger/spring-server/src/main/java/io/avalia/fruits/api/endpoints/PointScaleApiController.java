@@ -29,12 +29,7 @@ public class PointScaleApiController implements PointScalesApi {
 
     @Override
     public ResponseEntity<Object> updatePointScale(Integer appKey, String pointScaleName, PointScale pointScale) {
-        PointScaleEntity res = pointScaleRepository.deletePointScaleEntitiesByNameAndAppKey(pointScaleName, appKey);
-        if (res != null) {
-            pointScaleRepository.save(tools.toPointScaleEntity(pointScale));
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.badRequest().build();
+        return null; // TODO: todo
     }
 
     @Override
