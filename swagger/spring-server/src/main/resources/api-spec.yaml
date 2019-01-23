@@ -150,29 +150,6 @@ paths:
           schema:
             type: object
 
-  /pointScales/{pointScaleName}/{username}:
-    get:
-      tags:
-        - "pointScales"
-      description: return the points the user have
-      operationId: getPoints
-      parameters:
-        - $ref: '#/parameters/pointScaleName'
-        - $ref: '#/parameters/appKey'
-        - $ref: '#/parameters/username'
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: success
-          schema:
-            type: integer
-        '404':
-          description: user not found
-          schema:
-            type: object
-
-
   /rules:
     get:
       tags:
@@ -322,6 +299,30 @@ paths:
           description: user returned
           schema:
             $ref: '#/definitions/User'
+
+  /users/{username}/points:
+    get:
+      tags:
+        - "users"
+      description: return the points the user have
+      operationId: getPoints
+      parameters:
+        - $ref: '#/parameters/pointScaleName'
+        - $ref: '#/parameters/appKey'
+        - $ref: '#/parameters/username'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: success
+          schema:
+            type: integer
+        '404':
+          description: user not found
+          schema:
+            type: object
+
+
 
 parameters:
   badge:
@@ -485,3 +486,21 @@ definitions:
     required:
       - pointScale
       - points
+
+  Application:
+    type: object
+    properties:
+      id:
+        type: integer
+      pointScales:
+        type: array
+        items:
+          $ref: '#/definitions/PointScale'
+      badges:
+        type: array
+        items:
+          $ref: '#/definitions/Badge'
+      rules:
+        type: array
+        items:
+          $ref: '#/definitions/Rule'
