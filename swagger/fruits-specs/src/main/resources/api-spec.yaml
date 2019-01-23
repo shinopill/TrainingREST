@@ -302,9 +302,9 @@ paths:
         '200':
           description: list of all users
           schema:
-          type: array
-          items:
-            $ref: '#/definitions/User'
+            type: array
+            items:
+              $ref: '#/definitions/User'
 
   /users/{username}:
     get:
