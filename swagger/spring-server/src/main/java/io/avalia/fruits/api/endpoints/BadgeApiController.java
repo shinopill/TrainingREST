@@ -7,10 +7,14 @@ import io.avalia.fruits.entities.ApplicationEntity;
 import io.avalia.fruits.entities.BadgeEntity;
 import io.avalia.fruits.repositories.ApplicationRepository;
 import io.avalia.fruits.repositories.BadgeRepository;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +33,7 @@ public class BadgeApiController implements BadgesApi {
     private Tools tools = new Tools();
 
     @Override
-    public ResponseEntity<List<Badge>> getBadges(Integer appKey) {
+    public ResponseEntity<List<Badge>> getBadges(@ApiParam(value = "" ,required=true ) @RequestHeader(value="appKey", required=true) Integer appKey) {
         ApplicationEntity app = applicationRepository.findByApplicationID(appKey);
 
         if(app != null){
@@ -47,7 +51,7 @@ public class BadgeApiController implements BadgesApi {
     }
 
     @Override
-    public ResponseEntity<Object> createBadge(Badge badge) {
+    public ResponseEntity<Object> createBadge(@ApiParam(value = "" ,required=true ) @RequestBody Badge badge) {
         Integer appKey = badge.getAppKey();
 
         ResponseEntity<Badge> res = getBadge(badge.getAppKey(), badge.getName());
@@ -55,7 +59,7 @@ public class BadgeApiController implements BadgesApi {
         if (!res.hasBody()) {
             ApplicationEntity app = applicationRepository.findByApplicationID(appKey);
             if(app == null){
-                app = tools.createApplicaitonEntity(appKey);
+                app = tools.createApplicationEntity(appKey);
 
             }
             List<BadgeEntity> badges = app.getBagdes();
@@ -70,7 +74,8 @@ public class BadgeApiController implements BadgesApi {
     }
 
     @Override
-    public ResponseEntity<Badge> getBadge(Integer appKey, String badgeName) {
+    public  ResponseEntity<Badge> getBadge(@ApiParam(value = "" ,required=true ) @RequestHeader(value="appKey", required=true) Integer appKey,
+                                           @ApiParam(value = "",required=true ) @PathVariable("badgeName") String badgeName){
 
         BadgeEntity res = badgeRepository.findBadgeEntitiesByNameAndAppKey(badgeName, appKey);
         if(res == null){
@@ -80,7 +85,9 @@ public class BadgeApiController implements BadgesApi {
     }
 
     @Override
-    public ResponseEntity<Object> modifiyBadge(Badge badge, String badgeName, Integer appKey) {
+    public ResponseEntity<Object> modifiyBadge(@ApiParam(value = "" ,required=true ) @RequestBody Badge badge,
+                                               @ApiParam(value = "",required=true ) @PathVariable("badgeName") String badgeName,
+                                               @ApiParam(value = "" ,required=true ) @RequestHeader(value="appKey", required=true) Integer appKey) {
         ApplicationEntity app = applicationRepository.findByApplicationID(appKey);
         ResponseEntity<Badge> res = getBadge(badge.getAppKey(), badge.getName());
 

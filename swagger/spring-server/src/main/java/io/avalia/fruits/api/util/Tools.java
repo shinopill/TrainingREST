@@ -140,7 +140,7 @@ public class Tools {
         return pointScaleWithPoints;
     }
 
-   public ApplicationEntity createApplicaitonEntity(Integer id){
+   public ApplicationEntity createApplicationEntity(Integer id){
         ApplicationEntity applicationEntity = new ApplicationEntity();
         applicationEntity.setApplicationID(id);
         applicationEntity.setBagdes(new ArrayList<BadgeEntity>());
