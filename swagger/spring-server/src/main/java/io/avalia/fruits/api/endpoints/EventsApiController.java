@@ -13,11 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.AccessType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Transactional
 @Controller
 public class EventsApiController implements EventsApi {
 
@@ -68,14 +70,17 @@ public class EventsApiController implements EventsApi {
                     PointScaleWithPointsEntity pointScaleToChange = null;
 
                     for(PointScaleWithPointsEntity pswp : pointScaleWithPointsEntities){
+                        System.out.println("trying pointscale");
                         if(pswp.getPointScaleEntity().getName().equalsIgnoreCase(r.getPointScale().getName())){
+                            System.out.println("trying pointscale found");
                             pointScaleToChange = pswp;
-                            pointScaleToChange.setPoints(pswp.getPoints() + r.getPoints());
+                            pswp.setPoints(pswp.getPoints() + r.getPoints());
                             break;
                         }
                     }
 
                     if(pointScaleToChange == null){
+                        System.out.println("New pointScale");
                         PointScaleEntity ps = pointScaleRepository.findByNameAndAppKey(r.getPointScale().getName(),r.getAppKey());
                         pointScaleToChange = new PointScaleWithPointsEntity();
                         if(ps == null){
@@ -90,12 +95,15 @@ public class EventsApiController implements EventsApi {
                     List<BadgeEntity> badges = user.getBadges();
                     BadgeEntity badgeToGet = null;
                     for(BadgeEntity b : badges){
+                        System.out.println("Trying badge");
                         if(b.getName().equalsIgnoreCase(r.getBadge().getName()) && b.getDescription().equalsIgnoreCase(r.getBadge().getDescription()))
+                            System.out.println("Badg dound");
                             badgeToGet = b;
                             break;
                     }
 
                     if(badgeToGet == null){
+                        System.out.println("New badge");
                         badges.add(r.getBadge());
                     }
 
@@ -114,6 +122,7 @@ public class EventsApiController implements EventsApi {
                     if(numberOfTimes == r.getNumberOfTimesToGetTheAward()){
                         List<PointScaleWithPointsEntity> pointScaleWithPointsEntities = user.getPointScaleWithPoints();
                         PointScaleWithPointsEntity pointScaleToChange = null;
+
                         for(PointScaleWithPointsEntity pswp : pointScaleWithPointsEntities){
                             if(pswp.getPointScaleEntity().getName().equalsIgnoreCase(r.getPointScale().getName())){
                                 pointScaleToChange = pswp;
@@ -123,18 +132,30 @@ public class EventsApiController implements EventsApi {
                         }
 
                         if(pointScaleToChange == null){
+                            PointScaleEntity ps = pointScaleRepository.findByNameAndAppKey(r.getPointScale().getName(),r.getAppKey());
                             pointScaleToChange = new PointScaleWithPointsEntity();
+                            if(ps == null){
+                                pointScaleToChange.setPointScaleEntity(r.getPointScale());
+                            }else{
+                                pointScaleToChange.setPointScaleEntity(ps);
+                            }
                             pointScaleToChange.setPoints(r.getPoints());
-                            pointScaleToChange.setPointScaleEntity(r.getPointScale());
+                            pointScaleWithPointsEntities.add(pointScaleToChange);
                         }
 
                         List<BadgeEntity> badges = user.getBadges();
                         BadgeEntity badgeToGet = null;
-                        if(!badges.contains(r.getBadge())){
+                        for(BadgeEntity b : badges){
+                            if(b.getName().equalsIgnoreCase(r.getBadge().getName()) && b.getDescription().equalsIgnoreCase(r.getBadge().getDescription()))
+                                badgeToGet = b;
+                            break;
+                        }
+
+                        if(badgeToGet == null){
                             badges.add(r.getBadge());
                         }
 
-                        users.add(user);
+                        events.add(tools.toEventEntity(event));
                         applicationRepository.save(app);
                         return ResponseEntity.accepted().build();
 

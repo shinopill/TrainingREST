@@ -3,13 +3,16 @@ package io.avalia.fruits.api.endpoints;
 import io.avalia.fruits.api.UsersApi;
 import io.avalia.fruits.api.model.User;
 import io.avalia.fruits.api.util.Tools;
+import io.avalia.fruits.entities.ApplicationEntity;
 import io.avalia.fruits.entities.PointScaleWithPointsEntity;
 import io.avalia.fruits.entities.UserEntity;
+import io.avalia.fruits.repositories.ApplicationRepository;
 import io.avalia.fruits.repositories.UserRepository;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 
@@ -21,6 +24,9 @@ import java.util.List;
 
 @Controller
 public class UserApiController implements UsersApi {
+
+    @Autowired
+    ApplicationRepository applicationRepository;
 
     @Autowired
     UserRepository userRepository;
