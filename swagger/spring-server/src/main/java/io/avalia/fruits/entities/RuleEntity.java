@@ -18,6 +18,7 @@ public class RuleEntity implements Serializable {
     private String eventType;
     private int numberOfTimesToGetTheAward;
     private String description;
+    private String property;
     private int points;
     private PointScaleEntity pointScale;
     private BadgeEntity badge;
@@ -88,6 +89,18 @@ public class RuleEntity implements Serializable {
 
     public void setBadge(BadgeEntity badge) {
         this.badge = badge;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getProperty() {
+        return property;
+    }
+
+    public void setProperty(String property) {
+        this.property = property;
     }
 }
 

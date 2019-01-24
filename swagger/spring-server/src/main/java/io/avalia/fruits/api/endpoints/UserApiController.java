@@ -43,7 +43,7 @@ public class UserApiController implements UsersApi {
             int points;
 
             for (int i = 0; i < pointScaleWithPointsEntities.size(); ++i) {
-                if (pointScaleWithPointsEntities.get(i).getPointScaleEntity().getName() == pointScaleName) {
+                if (pointScaleWithPointsEntities.get(i).getPointScaleEntity().getName().equalsIgnoreCase(pointScaleName)) {
                     points = pointScaleWithPointsEntities.get(i).getPoints();
                     return ResponseEntity.ok(points);
                 }

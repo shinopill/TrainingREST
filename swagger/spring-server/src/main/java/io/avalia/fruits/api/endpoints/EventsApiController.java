@@ -64,23 +64,24 @@ public class EventsApiController implements EventsApi {
 
 
         for (RuleEntity r : rules) {
-            if(r.getEventType().equalsIgnoreCase(event.getEventType())){
+            if(r.getEventType().equalsIgnoreCase(event.getEventType()) && event.getProperties().contains(r.getProperty())){
+                // Si on doit faire tout le temps l'event
                 if(r.getNumberOfTimesToGetTheAward() == 1){
+
                     List<PointScaleWithPointsEntity> pointScaleWithPointsEntities = user.getPointScaleWithPoints();
                     PointScaleWithPointsEntity pointScaleToChange = null;
 
+                    //On regarde si on a déjé un pointScaleWithPoints pour l'event
                     for(PointScaleWithPointsEntity pswp : pointScaleWithPointsEntities){
-                        System.out.println("trying pointscale");
                         if(pswp.getPointScaleEntity().getName().equalsIgnoreCase(r.getPointScale().getName())){
-                            System.out.println("trying pointscale found");
                             pointScaleToChange = pswp;
                             pswp.setPoints(pswp.getPoints() + r.getPoints());
                             break;
                         }
                     }
 
+                    //Sinon on le crée
                     if(pointScaleToChange == null){
-                        System.out.println("New pointScale");
                         PointScaleEntity ps = pointScaleRepository.findByNameAndAppKey(r.getPointScale().getName(),r.getAppKey());
                         pointScaleToChange = new PointScaleWithPointsEntity();
                         if(ps == null){
@@ -92,18 +93,17 @@ public class EventsApiController implements EventsApi {
                         pointScaleWithPointsEntities.add(pointScaleToChange);
                     }
 
+                    //On regarde si il y a déjà un bage
                     List<BadgeEntity> badges = user.getBadges();
                     BadgeEntity badgeToGet = null;
                     for(BadgeEntity b : badges){
-                        System.out.println("Trying badge");
                         if(b.getName().equalsIgnoreCase(r.getBadge().getName()) && b.getDescription().equalsIgnoreCase(r.getBadge().getDescription()))
-                            System.out.println("Badg dound");
                             badgeToGet = b;
                             break;
                     }
 
+                    //Sinon on lui ajoute le bagde
                     if(badgeToGet == null){
-                        System.out.println("New badge");
                         badges.add(r.getBadge());
                     }
 
@@ -111,10 +111,12 @@ public class EventsApiController implements EventsApi {
                     applicationRepository.save(app);
                     return ResponseEntity.accepted().build();
                 }else{
-                    int numberOfTimes = 0;
+
+                    int numberOfTimes = 1;
                     for(EventEntity e : events){
                         if(e.getUsername().equalsIgnoreCase(event.getUsername()) &&
-                                e.getEventType().equalsIgnoreCase(event.getEventType())){
+                                e.getEventType().equalsIgnoreCase(event.getEventType()) &&
+                                e.getProperties().contains(r.getProperty())){
                             numberOfTimes++;
                         }
                     }
@@ -159,6 +161,10 @@ public class EventsApiController implements EventsApi {
                         applicationRepository.save(app);
                         return ResponseEntity.accepted().build();
 
+                    }else{
+                        events.add(tools.toEventEntity(event));
+                        applicationRepository.save(app);
+                        return ResponseEntity.accepted().build();
                     }
                 }
             }
@@ -167,4 +173,7 @@ public class EventsApiController implements EventsApi {
         return ResponseEntity.badRequest().build();
 
     }
+
+
 }
+

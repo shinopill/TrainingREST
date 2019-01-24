@@ -69,6 +69,7 @@ public class Tools {
         entity.setDescription(rule.getDescription());
         entity.setPoints(rule.getPoints());
         entity.setPointScale(toPointScaleEntity(rule.getPointScale()));
+        entity.setProperty(rule.getProperty());
         entity.setBadge(toBadgeEntity(rule.getBadge()));
         return entity;
     }
@@ -83,6 +84,7 @@ public class Tools {
         rule.setPoints(ruleEntity.getPoints());
         rule.setPointScale(toPointScale(ruleEntity.getPointScale()));
         rule.setBadge(toBadge(ruleEntity.getBadge()));
+        rule.setProperty(ruleEntity.getProperty());
         return rule;
     }
 
