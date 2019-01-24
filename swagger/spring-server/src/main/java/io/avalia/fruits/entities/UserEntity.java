@@ -13,6 +13,10 @@ public class UserEntity implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @org.springframework.data.annotation.Version
+    private long version;
+
+
     private long idFromApplication;
     private String name;
     private int appKey;

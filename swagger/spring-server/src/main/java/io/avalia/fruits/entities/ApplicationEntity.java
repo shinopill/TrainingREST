@@ -16,6 +16,10 @@ public class ApplicationEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @org.springframework.data.annotation.Version
+    private long version;
+
+
     private Integer applicationID;
 
     @OneToMany(cascade = CascadeType.ALL)

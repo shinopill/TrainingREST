@@ -14,6 +14,10 @@ public class BadgeEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @org.springframework.data.annotation.Version
+    private long version;
+
+
     private String name;
     private String description;
     private int appKey;
