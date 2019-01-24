@@ -1,8 +1,5 @@
 package io.avalia.fruits.entities;
 
-import io.avalia.fruits.api.model.Badge;
-import io.avalia.fruits.api.model.PointScale;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;

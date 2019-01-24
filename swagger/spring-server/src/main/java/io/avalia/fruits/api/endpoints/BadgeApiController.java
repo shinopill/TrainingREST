@@ -60,6 +60,15 @@ public class BadgeApiController implements BadgesApi {
 
     @Override
     public ResponseEntity<Object> modifiyBadge(Badge badge, String badgeName, Integer appKey) {
-        return null; // TODO: todo
+        BadgeEntity res = badgeRepository.findBadgeEntitiesByNameAndAppKey(badgeName, appKey);
+        if (res != null) {
+            Badge updatedBadge = tools.toBadge(res);
+            updatedBadge.setName(badge.getName());
+            updatedBadge.setDescription(badge.getDescription());
+            updatedBadge.setAppKey(badge.getAppKey());
+            badgeRepository.save(tools.toBadgeEntity(updatedBadge));
+            return ResponseEntity.accepted().build();
+        }
+        return ResponseEntity.badRequest().build();
     }
 }

@@ -65,6 +65,21 @@ public class RuleApiController implements RulesApi {
 
     @Override
     public ResponseEntity<Object> updateRule(Integer appKey, String ruleName, Rule rule) {
-        return null; // TODO: todo
+        RuleEntity res = ruleRepository.findRuleEntityByNameAndAppKey(ruleName, appKey);
+        if(res != null){
+            Rule updatedRule = tools.toRule(res);
+            updatedRule.setAppKey(rule.getAppKey());
+            updatedRule.setName(rule.getName());
+            updatedRule.setEventType(rule.getEventType());
+            updatedRule.setNumberOfTimesToGetTheAward(rule.getNumberOfTimesToGetTheAward());
+            updatedRule.setDescription(rule.getDescription());
+            updatedRule.setPoints(rule.getPoints());
+            updatedRule.setPointScale(rule.getPointScale());
+            updatedRule.setBadge(rule.getBadge());
+            ruleRepository.save(tools.toRuleEntity(updatedRule));
+            return ResponseEntity.accepted().build();
+        }
+
+        return ResponseEntity.badRequest().build();
     }
 }
