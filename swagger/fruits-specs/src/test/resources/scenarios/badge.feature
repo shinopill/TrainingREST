@@ -5,19 +5,19 @@ Feature: Managing badges
       
    Scenario: Create a badge
       Given I have a badge payload
-      When I POST it to the /badge endpoint
-      Then I receive a 201 status code
+      When I POST it to the /badges endpoint
+      Then I receive a 202 status code
 
    Scenario: Create an already existing badge   
       Given I have a badge payload
-      When I POST it to the /badge endpoint
+      When I POST it to the /badges endpoint
       Then I receive a 201 status code
-      When I POST it to the /badge endpoint
-      Then I receive a 403 status code
+      When I POST it to the /badges endpoint
+      Then I receive a 400 status code
 
    Scenario: Check the badge has been created
       Given I have a badge payload
-      When I GET it to the /badge/"[badgeName]" endpoint
+      When I GET it to the /badges/{word} endpoint
       Then I receive a 200 status code 
       And response body should contain the asked badge data
 
@@ -29,17 +29,5 @@ Feature: Managing badges
 
    Scenario: Modify a badge
       Given I have a badge payload
-      When I PUT it to the /badge/"{badgeName}" endpoint
+      When I PUT it to the /badges/"{badgeName}" endpoint
       Then I receive a 201 status code
-
-   Scenario: Delete a badge
-      Given I have a badge payload
-      When I DELETE it to the badges endpoint
-      Then I receive a 200 status code
-
-   Scenario: Delete an existing badge
-      Given I have a badge payload
-      When I DELETE it to the badges endpoint
-      Then I receive a 200 status code
-      When I DELETE it to the badges endpoint
-      Then I receive a 400 status code

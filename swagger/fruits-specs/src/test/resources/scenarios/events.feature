@@ -7,3 +7,5 @@ Feature: Managing Events
     Given I have an event payload
     When I POST it to the /events payload
     Then I receive a 201 status code
+
+  Scenario:
