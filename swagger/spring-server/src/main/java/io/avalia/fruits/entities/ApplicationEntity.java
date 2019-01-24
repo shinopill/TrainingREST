@@ -16,26 +16,28 @@ public class ApplicationEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private long applicationID;
+    private Integer applicationID;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     List<EventEntity> events;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     List<BadgeEntity> bagdes;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     List<PointScaleEntity> pointScales;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     List<RuleEntity> rules;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    List<UserEntity> users;
 
-    public long getApplicationID() {
+    public Integer getApplicationID() {
         return applicationID;
     }
 
-    public void setApplicationID(long applicationID) {
+    public void setApplicationID(Integer applicationID) {
         this.applicationID = applicationID;
     }
 
@@ -69,5 +71,13 @@ public class ApplicationEntity implements Serializable {
 
     public void setRules(List<RuleEntity> rules) {
         this.rules = rules;
+    }
+
+    public List<UserEntity> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<UserEntity> users) {
+        this.users = users;
     }
 }

@@ -84,16 +84,37 @@ public class EventsApiController implements EventsApi {
                     }
 
                     if(numberOfTimes == r.getNumberOfTimesToGetTheAward()){
-                        
+                        List<PointScaleWithPointsEntity> pointScaleWithPointsEntities = user.getPointScaleWithPoints();
+                        PointScaleWithPointsEntity pointScaleToChange = null;
+                        for(PointScaleWithPointsEntity pswp : pointScaleWithPointsEntities){
+                            if(pswp.getPointScaleEntity().getName().equalsIgnoreCase(r.getPointScale().getName())){
+                                pointScaleToChange = pswp;
+                                pointScaleToChange.setPoints(pswp.getPoints() + r.getPoints());
+                                break;
+                            }
+                        }
+
+                        if(pointScaleToChange == null){
+                            pointScaleToChange = new PointScaleWithPointsEntity();
+                            pointScaleToChange.setPoints(r.getPoints());
+                            pointScaleToChange.setPointScaleEntity(r.getPointScale());
+                        }
+
+                        List<BadgeEntity> badges = user.getBadges();
+                        BadgeEntity badgeToGet = null;
+                        if(!badges.contains(r.getBadge())){
+                            badges.add(r.getBadge());
+                        }
+
+                        users.add(user);
+                        applicationRepository.save(app);
 
                     }
                 }
-
-
-
             }
         }
 
-        return null;
+        return ResponseEntity.accepted().build();
+
     }
 }

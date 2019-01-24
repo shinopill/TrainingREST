@@ -139,4 +139,16 @@ public class Tools {
         pointScaleWithPoints.setPoints(pointScaleWithPointsEntity.getPoints());
         return pointScaleWithPoints;
     }
+
+   public ApplicationEntity createApplicaitonEntity(Integer id){
+        ApplicationEntity applicationEntity = new ApplicationEntity();
+        applicationEntity.setApplicationID(id);
+        applicationEntity.setBagdes(new ArrayList<BadgeEntity>());
+        applicationEntity.setEvents(new ArrayList<EventEntity>());
+        applicationEntity.setPointScales(new ArrayList<PointScaleEntity>());
+        applicationEntity.setRules(new ArrayList<RuleEntity>());
+        applicationEntity.setUsers(new ArrayList<UserEntity>());
+        return applicationEntity;
+   }
+
 }

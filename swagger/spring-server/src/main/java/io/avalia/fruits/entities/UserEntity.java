@@ -17,7 +17,7 @@ public class UserEntity implements Serializable{
     private String username;
     private int appKey;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     List<PointScaleWithPointsEntity> pointScaleWithPoints;
 
     @ManyToMany
