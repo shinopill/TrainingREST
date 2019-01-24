@@ -90,7 +90,7 @@ paths:
   /pointScales:
     post:
       tags:
-        - "pointScales"
+        - "pointscales"
       description: create a pointScale
       operationId: createPointScale
       consumes:
@@ -111,7 +111,7 @@ paths:
   /pointScales/{pointScaleName}:
     get:
       tags:
-        - "pointScales"
+        - "pointscales"
       description: return the pointScale wanted
       operationId: getPointScale
       parameters:
@@ -131,7 +131,7 @@ paths:
 
     put:
       tags:
-        - "pointScales"
+        - "pointscales"
       description: update a pointScale
       operationId: updatePointScale
       consumes:
@@ -330,7 +330,7 @@ parameters:
       $ref: '#/definitions/Badge'
 
   appKey:
-    name: X-appKey
+    name: appKey
     in: header
     required: true
     type: integer
@@ -509,7 +509,6 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/User'
-
     required:
       - id
       - pointScales

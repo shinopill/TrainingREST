@@ -20,7 +20,8 @@ public class UserEntity implements Serializable{
     @OneToMany(cascade = CascadeType.ALL)
     List<PointScaleWithPointsEntity> pointScaleWithPoints;
 
-    @ManyToMany
+
+    @ManyToMany(cascade = CascadeType.ALL)
     List<BadgeEntity> badges;
 
     public long getId() {return id; }

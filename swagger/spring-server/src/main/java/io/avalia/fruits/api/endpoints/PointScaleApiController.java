@@ -7,11 +7,17 @@ import io.avalia.fruits.entities.ApplicationEntity;
 import io.avalia.fruits.entities.PointScaleEntity;
 import io.avalia.fruits.repositories.ApplicationRepository;
 import io.avalia.fruits.repositories.PointScaleRepository;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.util.List;
 
+@Controller
 public class PointScaleApiController implements PointScalesApi {
 
     @Autowired
@@ -20,10 +26,11 @@ public class PointScaleApiController implements PointScalesApi {
     @Autowired
     ApplicationRepository applicationRepository;
 
-    private Tools tools;
+    private Tools tools = new Tools();
 
     @Override
-    public ResponseEntity<PointScale> getPointScale(String pointScaleName, Integer appKey) {
+    public ResponseEntity<PointScale> getPointScale(@ApiParam(value = "",required=true ) @PathVariable("pointScaleName") String pointScaleName,
+                                                    @ApiParam(value = "" ,required=true ) @RequestHeader(value="appKey", required=true) Integer appKey) {
         PointScaleEntity res = pointScaleRepository.findByNameAndAppKey(pointScaleName, appKey);
         if (res != null) {
             return ResponseEntity.ok(tools.toPointScale(res));
@@ -32,7 +39,9 @@ public class PointScaleApiController implements PointScalesApi {
     }
 
     @Override
-    public ResponseEntity<Object> updatePointScale(Integer appKey, String pointScaleName, PointScale pointScale) {
+    public ResponseEntity<Object> updatePointScale(@ApiParam(value = "" ,required=true ) @RequestHeader(value="appKey", required=true) Integer appKey,
+                                                   @ApiParam(value = "",required=true ) @PathVariable("pointScaleName") String pointScaleName,
+                                                   @ApiParam(value = "" ,required=true ) @RequestBody PointScale pointScale) {
         ApplicationEntity app = applicationRepository.findByApplicationID(appKey);
         if(app != null){
             List<PointScaleEntity> pointScaleEntities = app.getPointScales();
@@ -53,18 +62,22 @@ public class PointScaleApiController implements PointScalesApi {
     }
 
     @Override
-    public ResponseEntity<Object> createPointScale(PointScale pointScale) {
+    public ResponseEntity<Object> createPointScale(@ApiParam(value = "" ,required=true ) @RequestBody PointScale pointScale) {
         Integer appKey = pointScale.getAppKey();
-        PointScale res = tools.toPointScale(pointScaleRepository.findByNameAndAppKey(pointScale.getName(), pointScale.getAppKey()));
+        System.out.println(appKey);
+        System.out.println(pointScale.toString());
+        PointScaleEntity res = pointScaleRepository.findByNameAndAppKey(pointScale.getName(), pointScale.getAppKey());
         if (res == null) {
             ApplicationEntity app = applicationRepository.findByApplicationID(appKey);
-            if(app == null) {
-                app = tools.createApplicaitonEntity(appKey);
+            if(app == null){
+                app = tools.createApplicationEntity(appKey);
             }
 
             List<PointScaleEntity> pointScaleEntities = app.getPointScales();
             PointScaleEntity newPointScale = tools.toPointScaleEntity(pointScale);
             pointScaleEntities.add(newPointScale);
+
+            applicationRepository.save(app);
             return ResponseEntity.accepted().build();
 
         } else {

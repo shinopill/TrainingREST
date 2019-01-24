@@ -6,9 +6,12 @@ import io.avalia.fruits.api.util.Tools;
 import io.avalia.fruits.entities.PointScaleWithPointsEntity;
 import io.avalia.fruits.entities.UserEntity;
 import io.avalia.fruits.repositories.UserRepository;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +28,9 @@ public class UserApiController implements UsersApi {
     private Tools tools = new Tools();
 
     @Override
-    public ResponseEntity<Integer> getPoints(String pointScaleName, Integer appKey, String username){
+    public ResponseEntity<Integer> getPoints(@ApiParam(value = "",required=true ) @PathVariable("pointScaleName") String pointScaleName,
+                                      @ApiParam(value = "" ,required=true ) @RequestHeader(value="appKey", required=true) Integer appKey,
+                                      @ApiParam(value = "",required=true ) @PathVariable("username") String username){
         UserEntity res = userRepository.findUserEntityByNameAndAppKey(username, appKey);
         if(res!= null) {
             List<PointScaleWithPointsEntity> pointScaleWithPointsEntities = res.getPointScaleWithPoints();
@@ -42,7 +47,8 @@ public class UserApiController implements UsersApi {
     }
 
     @Override
-    public ResponseEntity<User> getUser(Integer appKey, String username) {
+    public  ResponseEntity<User> getUser(@ApiParam(value = "" ,required=true ) @RequestHeader(value="appKey", required=true) Integer appKey,
+                                         @ApiParam(value = "",required=true ) @PathVariable("username") String username){
         UserEntity res = userRepository.findUserEntityByNameAndAppKey(username, appKey);
         if (res != null) {
             return ResponseEntity.ok(tools.toUser(res));
@@ -51,7 +57,7 @@ public class UserApiController implements UsersApi {
     }
 
     @Override
-    public ResponseEntity<List<User>> getUsers(Integer appKey) {
+    public  ResponseEntity<List<User>> getUsers(@ApiParam(value = "" ,required=true ) @RequestHeader(value="appKey", required=true) Integer appKey) {
         List<UserEntity> entities = userRepository.findAllUserEntityByAppKey(appKey);
         if (entities != null) {
             List<User> users = new ArrayList<>();

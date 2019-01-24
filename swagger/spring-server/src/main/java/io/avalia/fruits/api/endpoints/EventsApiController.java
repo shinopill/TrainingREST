@@ -3,18 +3,21 @@ package io.avalia.fruits.api.endpoints;
 import io.avalia.fruits.api.EventsApi;
 import io.avalia.fruits.api.model.Event;
 import io.avalia.fruits.api.model.PointScaleWithPoints;
+import io.avalia.fruits.api.util.Tools;
 import io.avalia.fruits.entities.*;
-import io.avalia.fruits.repositories.ApplicationRepository;
-import io.avalia.fruits.repositories.EventRepository;
-import io.avalia.fruits.repositories.UserRepository;
+import io.avalia.fruits.repositories.*;
+import io.swagger.annotations.ApiParam;
 import org.apache.tomcat.util.digester.Rules;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.AccessType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Controller
 public class EventsApiController implements EventsApi {
 
     @Autowired
@@ -23,8 +26,15 @@ public class EventsApiController implements EventsApi {
     @Autowired
     ApplicationRepository applicationRepository;
 
+    @Autowired
+    BadgeRepository badgeRepository;
 
-    public ResponseEntity<Object> sendEvent(Event event) {
+    @Autowired
+    PointScaleRepository pointScaleRepository;
+
+    private Tools tools = new Tools();
+
+    public ResponseEntity<Object> sendEvent(@ApiParam(value = "" ,required=true ) @RequestBody Event event){
         Integer appKey = event.getAppKey();
         ApplicationEntity app = applicationRepository.findByApplicationID(appKey);
         List<RuleEntity> rules = app.getRules();
