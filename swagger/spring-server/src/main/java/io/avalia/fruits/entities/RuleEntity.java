@@ -1,40 +1,29 @@
 package io.avalia.fruits.entities;
 
-import io.avalia.fruits.api.model.Badge;
-import io.avalia.fruits.api.model.PointScale;
-
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
 
+@Entity
 public class RuleEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String      name;
-    private String      description;
-    private int         appKey;
-    private String      badgeName;
-    private int         pointReward;
-    private String      pointScaleName;
+    private int appKey;
+    private String name;
+    private String eventType;
+    private int numberOfTimesToGetTheAward;
+    private String description;
+    private int points;
+    private PointScaleEntity pointScale;
+    private BadgeEntity badge;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public long getId() {
+        return id;
     }
 
     public int getAppKey() {
@@ -45,24 +34,60 @@ public class RuleEntity implements Serializable {
         this.appKey = appKey;
     }
 
-    public String getBadgeName() {
-        return badgeName;
+    public String getName() {
+        return name;
     }
 
-    public void setBadgeName(String badgeName) {
-        this.badgeName = badgeName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public int getPointReward() {
-        return pointReward;
+    public String getEventType() {
+        return eventType;
     }
 
-    public void setPointReward(int pointReward) {
-        this.pointReward = pointReward;
+    public void setEventType(String eventType) {
+        this.eventType = eventType;
     }
 
-    public String getPointScaleName() { return pointScaleName; }
+    public int getNumberOfTimesToGetTheAward() {
+        return numberOfTimesToGetTheAward;
+    }
 
-    public void setPointScaleName(String pointScaleName) { this.pointScaleName = pointScaleName; }
+    public void setNumberOfTimesToGetTheAward(int numberOfTimesToGetTheAward) {
+        this.numberOfTimesToGetTheAward = numberOfTimesToGetTheAward;
+    }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+    public PointScaleEntity getPointScale() {
+        return pointScale;
+    }
+
+    public void setPointScale(PointScaleEntity pointScale) {
+        this.pointScale = pointScale;
+    }
+
+    public BadgeEntity getBadge() {
+        return badge;
+    }
+
+    public void setBadge(BadgeEntity badge) {
+        this.badge = badge;
+    }
 }
+

@@ -1,71 +1,103 @@
 package io.avalia.fruits.api.endpoints;
 
-import io.avalia.fruits.api.BadgeApi;
+import io.avalia.fruits.api.BadgesApi;
 import io.avalia.fruits.api.model.Badge;
+import io.avalia.fruits.api.util.Tools;
+import io.avalia.fruits.entities.ApplicationEntity;
 import io.avalia.fruits.entities.BadgeEntity;
+import io.avalia.fruits.repositories.ApplicationRepository;
 import io.avalia.fruits.repositories.BadgeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-07-26T19:36:34.802Z")
 
 @Controller
-public class BadgeApiController implements BadgeApi {
+public class BadgeApiController implements BadgesApi {
 
     @Autowired
     BadgeRepository badgeRepository;
 
-    public ResponseEntity<Object> createBadge(Badge badge) {
-        Badge res = getBadge(badge.getAppKey(), badge.getName()).getBody();
-        if (res == null) {
-            BadgeEntity newBadgeEntity = toBadgeEntity(badge);
-            badgeRepository.save(newBadgeEntity);
+    @Autowired
+    ApplicationRepository applicationRepository;
 
-            return ResponseEntity.accepted().build();
-        } else {
-            return ResponseEntity.badRequest().build();
-        }
-    }
-
-    public ResponseEntity<Object> deleteBadge(Badge badge) {
-        BadgeEntity res = badgeRepository.deleteBadgeEntitiesByAppKeyAndName(badge.getAppKey(), badge.getName());
-        if (res != null) {
-            return ResponseEntity.accepted().build();
-        } else {
-            return ResponseEntity.badRequest().build();
-        }
-    }
-
-
-    public ResponseEntity<Badge> getBadge(Integer appKey, String badgeName) {
-        BadgeEntity res = badgeRepository.findBadgeEntitiesByAppKeyAndName(appKey, badgeName);
-        return ResponseEntity.ok(toBadge(res));
-    }
+    private Tools tools = new Tools();
 
     @Override
-    public ResponseEntity<Object> modifiyBadge(Badge badge, String badgeName, Integer appKey) {
-        BadgeEntity res = badgeRepository.deleteBadgeEntitiesByAppKeyAndName(appKey, badgeName);
-        if (res != null) {
-            badgeRepository.save(toBadgeEntity(badge));
-            return ResponseEntity.ok().build();
+    public ResponseEntity<List<Badge>> getBadges(Integer appKey) {
+        ApplicationEntity app = applicationRepository.findByApplicationID(appKey);
+
+        if(app != null){
+            List<BadgeEntity> badgesEntity = app.getBagdes();
+            if (badgesEntity != null) {
+                List<Badge> badges = new ArrayList();
+                for (BadgeEntity entity : badgesEntity) {
+                    badges.add(tools.toBadge(entity));
+                }
+
+                return ResponseEntity.ok(badges);
+            }
         }
         return ResponseEntity.badRequest().build();
     }
 
-    private BadgeEntity toBadgeEntity(Badge badge) {
-        BadgeEntity entity = new BadgeEntity();
-        entity.setName(badge.getName());
-        entity.setDescription(badge.getDescription());
-        entity.setAppKey(badge.getAppKey());
-        return entity;
+    @Override
+    public ResponseEntity<Object> createBadge(Badge badge) {
+        Integer appKey = badge.getAppKey();
+
+        ResponseEntity<Badge> res = getBadge(badge.getAppKey(), badge.getName());
+
+        if (!res.hasBody()) {
+            ApplicationEntity app = applicationRepository.findByApplicationID(appKey);
+            if(app == null){
+                app = tools.createApplicaitonEntity(appKey);
+
+            }
+            List<BadgeEntity> badges = app.getBagdes();
+            badges.add(tools.toBadgeEntity(badge));
+            applicationRepository.save(app);
+
+            return ResponseEntity.accepted().build();
+       } else {
+             return ResponseEntity.badRequest().build();
+        }
+
     }
 
-    private Badge toBadge(BadgeEntity entity) {
-        Badge badge = new Badge();
-        badge.setName(entity.getName());
-        badge.setDescription(entity.getDescription());
-        badge.setAppKey(entity.getAppKey());
-        return badge;
+    @Override
+    public ResponseEntity<Badge> getBadge(Integer appKey, String badgeName) {
+
+        BadgeEntity res = badgeRepository.findBadgeEntitiesByNameAndAppKey(badgeName, appKey);
+        if(res == null){
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(tools.toBadge(res));
+    }
+
+    @Override
+    public ResponseEntity<Object> modifiyBadge(Badge badge, String badgeName, Integer appKey) {
+        ApplicationEntity app = applicationRepository.findByApplicationID(appKey);
+        ResponseEntity<Badge> res = getBadge(badge.getAppKey(), badge.getName());
+
+        if (!res.hasBody()) {
+            List<BadgeEntity> badges = app.getBagdes();
+            for (BadgeEntity b : badges){
+                if(b.getName().equalsIgnoreCase(badgeName)){
+                    b.setDescription(badge.getDescription());
+                    b.setName(badge.getName());
+                }
+            }
+
+            applicationRepository.save(app);
+
+            return ResponseEntity.accepted().build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

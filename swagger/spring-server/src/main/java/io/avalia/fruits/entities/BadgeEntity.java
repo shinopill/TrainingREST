@@ -6,9 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
 
-/**
- * Created by Olivier Liechti on 26/07/17.
- */
+
 @Entity
 public class BadgeEntity implements Serializable {
 

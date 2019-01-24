@@ -1,52 +1,74 @@
 package io.avalia.fruits.api.endpoints;
 
-import io.avalia.fruits.api.PointScaleApi;
+import io.avalia.fruits.api.PointScalesApi;
 import io.avalia.fruits.api.model.PointScale;
+import io.avalia.fruits.api.util.Tools;
+import io.avalia.fruits.entities.ApplicationEntity;
 import io.avalia.fruits.entities.PointScaleEntity;
+import io.avalia.fruits.repositories.ApplicationRepository;
 import io.avalia.fruits.repositories.PointScaleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
-public class PointScaleApiController implements PointScaleApi {
+import java.util.List;
+
+public class PointScaleApiController implements PointScalesApi {
 
     @Autowired
     PointScaleRepository pointScaleRepository;
 
-    @Override
-    public ResponseEntity<Object> createPointScale(PointScale pointScale) {
-        PointScale res = toPointScale(pointScaleRepository.findByNameAAndAppKey(pointScale.getName(), pointScale.getAppKey()));
-        if (res == null) {
-            PointScaleEntity newPointScale = toPointScaleEntity(pointScale);
-            pointScaleRepository.save(newPointScale);
+    @Autowired
+    ApplicationRepository applicationRepository;
 
-            return ResponseEntity.accepted().build();
-        } else {
-            return ResponseEntity.badRequest().build();
-        }
-    }
+    private Tools tools;
 
     @Override
-    public ResponseEntity<Object> deletePointScale(PointScale pointScale) {
-        PointScaleEntity res = pointScaleRepository.deleteByNameAndAppKey(pointScale.getName(), pointScale.getAppKey());
+    public ResponseEntity<PointScale> getPointScale(String pointScaleName, Integer appKey) {
+        PointScaleEntity res = pointScaleRepository.findByNameAndAppKey(pointScaleName, appKey);
         if (res != null) {
-            return ResponseEntity.accepted().build();
+            return ResponseEntity.ok(tools.toPointScale(res));
         }
         return ResponseEntity.badRequest().build();
     }
 
-    private PointScaleEntity toPointScaleEntity(PointScale pointScale) {
-        PointScaleEntity entity = new PointScaleEntity();
-        entity.setName(pointScale.getName());
-        entity.setDescription(pointScale.getDescription());
-        entity.setAppKey(pointScale.getAppKey());
-        return entity;
+    @Override
+    public ResponseEntity<Object> updatePointScale(Integer appKey, String pointScaleName, PointScale pointScale) {
+        ApplicationEntity app = applicationRepository.findByApplicationID(appKey);
+        if(app != null){
+            List<PointScaleEntity> pointScaleEntities = app.getPointScales();
+            for (PointScaleEntity p :pointScaleEntities) {
+                if(p.getName().equalsIgnoreCase(pointScaleName)){
+                    p.setName(pointScale.getName());
+                    p.setDescription(pointScale.getDescription());
+                }
+
+            }
+
+            applicationRepository.save(app);
+            return ResponseEntity.accepted().build();
+
+        }
+
+        return ResponseEntity.badRequest().build();
     }
 
-    private PointScale toPointScale(PointScaleEntity entity) {
-        PointScale pointScale = new PointScale();
-        pointScale.setName(entity.getName());
-        pointScale.setDescription(entity.getDescription());
-        pointScale.setAppKey(entity.getAppKey());
-        return pointScale;
+    @Override
+    public ResponseEntity<Object> createPointScale(PointScale pointScale) {
+        Integer appKey = pointScale.getAppKey();
+        PointScale res = tools.toPointScale(pointScaleRepository.findByNameAndAppKey(pointScale.getName(), pointScale.getAppKey()));
+        if (res == null) {
+            ApplicationEntity app = applicationRepository.findByApplicationID(appKey);
+            if(app == null) {
+                app = tools.createApplicaitonEntity(appKey);
+            }
+
+            List<PointScaleEntity> pointScaleEntities = app.getPointScales();
+            PointScaleEntity newPointScale = tools.toPointScaleEntity(pointScale);
+            pointScaleEntities.add(newPointScale);
+            return ResponseEntity.accepted().build();
+
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }
