@@ -1,0 +1,29 @@
+version : '2'
+
+services :
+  db:
+    image: mysql:5.7
+    container_name: amt_WP2_db
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_DATABASE: 'amt_project2'
+      MYSQL_ROOT_PASSWORD: 'toor'
+    volumes:
+      - my-db:/var/lib/mysql
+
+  spring:
+    build: spring
+    container_name: amt_project_spring
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "8080:8080"
+    links:
+      - db
+
+volumes:
+  my-db:
