@@ -2,6 +2,7 @@ package io.avalia.fruits.api.endpoints;
 
 import io.avalia.fruits.api.EventsApi;
 import io.avalia.fruits.api.model.Event;
+import io.avalia.fruits.api.model.PointScale;
 import io.avalia.fruits.api.model.PointScaleWithPoints;
 import io.avalia.fruits.api.util.Tools;
 import io.avalia.fruits.entities.*;
@@ -55,13 +56,17 @@ public class EventsApiController implements EventsApi {
             user.setBadges(new ArrayList<BadgeEntity>());
             user.setPointScaleWithPoints(new ArrayList<PointScaleWithPointsEntity>());
             user.setUsername(event.getUsername());
+            users.add(user);
         }
+
+
+
         for (RuleEntity r : rules) {
             if(r.getEventType().equalsIgnoreCase(event.getEventType())){
                 if(r.getNumberOfTimesToGetTheAward() == 1){
-
                     List<PointScaleWithPointsEntity> pointScaleWithPointsEntities = user.getPointScaleWithPoints();
                     PointScaleWithPointsEntity pointScaleToChange = null;
+
                     for(PointScaleWithPointsEntity pswp : pointScaleWithPointsEntities){
                         if(pswp.getPointScaleEntity().getName().equalsIgnoreCase(r.getPointScale().getName())){
                             pointScaleToChange = pswp;
@@ -71,19 +76,32 @@ public class EventsApiController implements EventsApi {
                     }
 
                     if(pointScaleToChange == null){
+                        PointScaleEntity ps = pointScaleRepository.findByNameAndAppKey(r.getPointScale().getName(),r.getAppKey());
                         pointScaleToChange = new PointScaleWithPointsEntity();
+                        if(ps == null){
+                            pointScaleToChange.setPointScaleEntity(r.getPointScale());
+                        }else{
+                            pointScaleToChange.setPointScaleEntity(ps);
+                        }
                         pointScaleToChange.setPoints(r.getPoints());
-                        pointScaleToChange.setPointScaleEntity(r.getPointScale());
+                        pointScaleWithPointsEntities.add(pointScaleToChange);
                     }
 
                     List<BadgeEntity> badges = user.getBadges();
                     BadgeEntity badgeToGet = null;
-                    if(!badges.contains(r.getBadge())){
+                    for(BadgeEntity b : badges){
+                        if(b.getName().equalsIgnoreCase(r.getBadge().getName()) && b.getDescription().equalsIgnoreCase(r.getBadge().getDescription()))
+                            badgeToGet = b;
+                            break;
+                    }
+
+                    if(badgeToGet == null){
                         badges.add(r.getBadge());
                     }
 
-                    users.add(user);
+                    events.add(tools.toEventEntity(event));
                     applicationRepository.save(app);
+                    return ResponseEntity.accepted().build();
                 }else{
                     int numberOfTimes = 0;
                     for(EventEntity e : events){
@@ -118,13 +136,14 @@ public class EventsApiController implements EventsApi {
 
                         users.add(user);
                         applicationRepository.save(app);
+                        return ResponseEntity.accepted().build();
 
                     }
                 }
             }
         }
 
-        return ResponseEntity.accepted().build();
+        return ResponseEntity.badRequest().build();
 
     }
 }

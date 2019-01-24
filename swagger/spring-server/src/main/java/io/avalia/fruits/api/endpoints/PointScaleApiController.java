@@ -64,8 +64,7 @@ public class PointScaleApiController implements PointScalesApi {
     @Override
     public ResponseEntity<Object> createPointScale(@ApiParam(value = "" ,required=true ) @RequestBody PointScale pointScale) {
         Integer appKey = pointScale.getAppKey();
-        System.out.println(appKey);
-        System.out.println(pointScale.toString());
+
         PointScaleEntity res = pointScaleRepository.findByNameAndAppKey(pointScale.getName(), pointScale.getAppKey());
         if (res == null) {
             ApplicationEntity app = applicationRepository.findByApplicationID(appKey);

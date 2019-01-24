@@ -1,6 +1,7 @@
 package io.avalia.fruits.api.endpoints;
 
 import io.avalia.fruits.api.RulesApi;
+import io.avalia.fruits.api.model.Badge;
 import io.avalia.fruits.api.model.PointScale;
 import io.avalia.fruits.api.model.Rule;
 import io.avalia.fruits.api.util.Tools;
@@ -46,12 +47,28 @@ public class RuleApiController implements RulesApi {
 
             List<BadgeEntity> badges = app.getBagdes();
             List<PointScaleEntity> pointScales = app.getPointScales();
-
-            if(!badges.contains(tools.toBadgeEntity(rule.getBadge()))){
-              badges.add(tools.toBadgeEntity(rule.getBadge()));
+            boolean ishere = false;
+            for(BadgeEntity b : badges){
+                if(b.getName().equalsIgnoreCase(rule.getBadge().getName()) && b.getDescription().equalsIgnoreCase(rule.getBadge().getDescription())){
+                    ishere = true;
+                    break;
+                }
             }
 
-            if(!badges.contains(tools.toPointScaleEntity(rule.getPointScale()))){
+            if(!ishere){
+                badges.add(tools.toBadgeEntity(rule.getBadge()));
+            }
+
+            ishere=false;
+
+            for(PointScaleEntity ps : pointScales){
+                if(ps.getName().equalsIgnoreCase(rule.getBadge().getName()) && ps.getDescription().equalsIgnoreCase(rule.getBadge().getDescription())){
+                    ishere = true;
+                    break;
+                }
+            }
+
+            if(!ishere){
                 pointScales.add(tools.toPointScaleEntity(rule.getPointScale()));
             }
 
