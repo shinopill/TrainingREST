@@ -1,15 +1,19 @@
 package io.avalia.fruits.api.spec.steps;
 
-import cucumber.api.PendingException;
+
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import io.avalia.fruits.ApiException;
 import io.avalia.fruits.ApiResponse;
 import io.avalia.fruits.api.BadgesApi;
+import io.avalia.fruits.api.EventsApi;
 import io.avalia.fruits.api.PointScalesApi;
+import io.avalia.fruits.api.RulesApi;
 import io.avalia.fruits.api.dto.Badge;
+import io.avalia.fruits.api.dto.Event;
 import io.avalia.fruits.api.dto.PointScale;
+import io.avalia.fruits.api.dto.Rule;
 import io.avalia.fruits.api.spec.helpers.Environment;
 
 import static org.junit.Assert.assertNotNull;
@@ -18,11 +22,16 @@ import static org.junit.Assert.assertEquals;
 public class CreationSteps {
 
     private Environment env;
+
     private BadgesApi badgeApi;
+    private EventsApi eventsApi;
     private PointScalesApi pointScaleApi;
+    private RulesApi rulesApi;
 
     private Badge badge;
+    private Event event;
     private PointScale pointScale;
+    private Rule rule;
     private String username;
 
     private ApiResponse lastApiResponse;
@@ -31,23 +40,33 @@ public class CreationSteps {
     private int lastStatusCode;
 
     public CreationSteps(Environment environment) {
-        env   = environment;
-        badgeApi  = env.getBadgesApi();
+        env = environment;
+        badgeApi = env.getBadgesApi();
         pointScaleApi = env.getPointScalesApi();
+        eventsApi = env.getEventsApi();
+        rulesApi = env.getRulesApi();
     }
 
-    @Given("^there is a Gamification server$")
+    @Given("^there is a gamification server$")
     public void there_is_a_Gamification_server() throws Throwable {
         assertNotNull(badgeApi);
         assertNotNull(pointScaleApi);
+        assertNotNull(eventsApi);
+        assertNotNull(rulesApi);
     }
 
+    /**
+     * Badge feature steps
+     */
     @Given("^I have a badge payload$")
     public void i_have_a_badge_payload() throws Throwable {
         badge = new Badge();
+        badge.setAppKey();
+        badge.setName("abc");
+        badge.setDescription("Badge de test pour la validation de la spec");
     }
 
-    @When("^I POST it to the /badge/ endpoint$")
+    @When("^I POST it to the /badges endpoint$")
     public void i_POST_it_to_the_badge_endpoint() throws Throwable {
 
         try {
@@ -55,7 +74,7 @@ public class CreationSteps {
             lastApiResponse = badgeApi.createBadgeWithHttpInfo(badge);
             lastApiCallThrewException = false;
             lastApiException = null;
-            lastStatusCode = lastApiException.getCode();
+            lastStatusCode = lastApiResponse.getStatusCode();
         } catch (ApiException ex) {
 
             lastApiCallThrewException = true;
@@ -67,12 +86,13 @@ public class CreationSteps {
 
     @Then("^I receive a (\\d+) status code$")
     public void i_receive_a_status_code(int arg1) throws Throwable {
-        assertEquals(201,arg1);
+        assertEquals(arg1,lastStatusCode);
     }
 
-    @When("^I GET it to the /badge/appId/badgeId endpoint$")
-    public void i_GET_it_to_the_badge_appId_badgeId_endpoint() throws Throwable {
-        badgeApi.getBadges(badge.getAppKey());
+
+    @When("^I GET it to the /badges/\"([^\"]*)\" endpoint$")
+    public void i_GET_it_to_the_badge_endpoint(String arg1) throws Throwable {
+        badgeApi.getBadge(badge.getAppKey(), badge.getName());
         lastApiCallThrewException = false;
         lastApiException = null;
         lastStatusCode = lastApiException.getCode();
@@ -83,68 +103,8 @@ public class CreationSteps {
         assertEquals(badge,lastApiResponse.getData());
     }
 
-    @Given("^I have an API key$")
-    public void i_have_an_API_key() throws Throwable {
-        assertNotNull(badge.getAppKey());
-    }
-
-    @When("^I GET all badges to the /badge endpoint$")
-    public void i_GET_all_badges_to_the_badge_endpoint() throws Throwable {
-        badgeApi.getBadges(badge.getAppKey());
-        lastApiCallThrewException = false;
-        lastApiException = null;
-        lastStatusCode = lastApiException.getCode();
-    }
-
-    @Then("^Response Body should contain a badges array$")
-    public void response_Body_should_contain_a_badges_array() throws Throwable {
-        assertNotNull(lastApiResponse.getData());
-    }
-
-    @When("^I POST it to the /badges/appId/badgeId endpoint$")
-    public void i_POST_it_to_the_badges_appId_badgeId_endpoint() throws Throwable {
-        try {
-
-            lastApiResponse = badgeApi.createBadgeWithHttpInfo(badge);
-            lastApiCallThrewException = false;
-            lastApiException = null;
-            lastStatusCode = lastApiException.getCode();
-        } catch (ApiException ex) {
-
-            lastApiCallThrewException = true;
-            lastApiResponse = null;
-            lastApiException = ex;
-            lastStatusCode = lastApiException.getCode();
-        }
-    }
-
-    @When("^I GET the badge with name to the /badges/name endpoint$")
-    public void i_GET_the_badge_with_name_to_the_badges_name_endpoint() throws Throwable {
-        badgeApi.getBadges(badge.getAppKey());
-        lastApiCallThrewException = false;
-        lastApiException = null;
-        lastStatusCode = lastApiException.getCode();
-    }
-
-    @When("^I POST it to the /badge/appId endpoint$")
-    public void i_POST_it_to_the_badge_appId_endpoint() throws Throwable {
-        try {
-
-            lastApiResponse = badgeApi.createBadgeWithHttpInfo(badge);
-            lastApiCallThrewException = false;
-            lastApiException = null;
-            lastStatusCode = lastApiException.getCode();
-        } catch (ApiException ex) {
-
-            lastApiCallThrewException = true;
-            lastApiResponse = null;
-            lastApiException = ex;
-            lastStatusCode = lastApiException.getCode();
-        }
-    }
-
-    @When("^I GET all badges to the /badge/appId endpoint$")
-    public void i_GET_all_badges_to_the_badge_appId_endpoint() throws Throwable {
+    @When("^I GET all badges to the /badges endpoint$")
+    public void i_GET_all_badges_to_the_badges_endpoint() throws Throwable {
         badgeApi.getBadges(badge.getAppKey());
         lastApiCallThrewException = false;
         lastApiException = null;
@@ -156,25 +116,60 @@ public class CreationSteps {
         assertNotNull(lastApiResponse.getData());
     }
 
-
-
-    /*************************
-     Steps for PointScales API
-     **************************/
-
-    @Given("^there is a gamification server$")
-    public void there_is_a_gamification_server() throws Throwable {
-        assertNotNull(badgeApi);
-        assertNotNull(pointScaleApi);
+    @When("^I PUT it to the /badges/\"([^\"]*)\" endpoint$")
+    public void i_PUT_it_to_the_badge_endpoint(String arg1) throws Throwable {
+        badgeApi.modifiyBadge(badge, badge.getName(), badge.getAppKey());
+        lastApiCallThrewException = false;
+        lastApiException = null;
+        lastStatusCode = lastApiException.getCode();
     }
+
+
+
+    /*
+     * Event tests
+     */
+
+    @Given("^I have an event payload$")
+    public void i_have_an_event_payload() throws Throwable {
+        event = new Event();
+        event.setAppKey(1234);
+
+        event.setUsername("toto");
+    }
+
+    @When("^I POST it to the /events payload$")
+    public void i_POST_it_to_the_events_payload() throws Throwable {
+        try {
+
+            lastApiResponse = eventsApi.sendEventWithHttpInfo(event);
+            lastApiCallThrewException = false;
+            lastApiException = null;
+            lastStatusCode = lastApiException.getCode();
+        } catch (ApiException ex) {
+
+            lastApiCallThrewException = true;
+            lastApiResponse = null;
+            lastApiException = ex;
+            lastStatusCode = lastApiException.getCode();
+        }
+    }
+
+    /*
+     * pointScale tests
+     */
 
     @Given("^I have a pointScale payload$")
     public void i_have_a_pointScale_payload() throws Throwable {
         pointScale = new PointScale();
+        pointScale.setAppKey(1234);
+        pointScale.setDescription("Pointscale de test");
+        pointScale.setName("Testeur Pro");
     }
 
-    @When("^I POST it to /pointScale endpoint$")
-    public void i_POST_it_to_pointScale_endpoint() throws Throwable {
+    @When("^I POST it to /pointScales endpoint$")
+    public void i_POST_it_to_pointScales_endpoint() throws Throwable {
+
         try {
 
             lastApiResponse = pointScaleApi.createPointScaleWithHttpInfo(pointScale);
@@ -190,11 +185,10 @@ public class CreationSteps {
         }
     }
 
-    @When("^I POST it to the /pointScale endpoint$")
-    public void i_POST_it_to_the_pointScale_endpoint() throws Throwable {
+    @When("^I PUT it to the /pointScales endpoint$")
+    public void i_PUT_it_to_the_pointScales_endpoint() throws Throwable {
         try {
-
-            lastApiResponse = pointScaleApi.createPointScaleWithHttpInfo(pointScale);
+            lastApiResponse = pointScaleApi.updatePointScaleWithHttpInfo(pointScale.getAppKey(),pointScale.getName(),pointScale);
             lastApiCallThrewException = false;
             lastApiException = null;
             lastStatusCode = lastApiException.getCode();
@@ -207,97 +201,22 @@ public class CreationSteps {
         }
     }
 
-    @Given("^I have an API key, a PointScale name and an username$")
-    public void i_have_an_API_key_a_PointScale_name_and_an_username() throws Throwable {
-        assertNotNull(pointScale);
-        username = "toto";
-    }
-
-    @When("^I GET it to the /pointScales/PointScaleName/username endpoint$")
-    public void i_GET_it_to_the_pointScales_PointScaleName_username_endpoint() throws Throwable {
-        pointScaleApi.getPoints(pointScale.getName(),pointScale.getAppKey(),username);
-        lastApiCallThrewException = false;
-        lastApiException = null;
-        lastStatusCode = lastApiException.getCode();
-    }
-
-    @Then("^response body should contain every PointScale data$")
-    public void response_body_should_contain_every_PointScale_data() throws Throwable {
-        assertNotNull(lastApiResponse.getData());
-    }
-
-
-    @When("^I GET it to the /pointScales/pointScaleName/users$")
-    public void i_GET_it_to_the_pointScales_pointScaleName_users() throws Throwable {
-        pointScaleApi.getPoints(pointScale.getName(),pointScale.getAppKey(),username);
-        lastApiCallThrewException = false;
-        lastApiException = null;
-        lastStatusCode = lastApiException.getCode();
-    }
-
-    @Then("^response body should contain every users whose have this pointscale$")
-    public void response_body_should_contain_every_users_whose_have_this_pointscale() throws Throwable {
-        assertNotNull(lastApiResponse.getData());
-    }
-
-    @When("^I GET it to the /pointScale/appId endpoint$")
-    public void i_GET_it_to_the_pointScale_appId_endpoint() throws Throwable {
-        pointScaleApi.getPoints(pointScale.getName(), pointScale.getAppKey(), username);
-        lastApiCallThrewException = false;
-        lastApiException = null;
-        lastStatusCode = lastApiException.getCode();
-    }
-
-    @Then("^response body should contain user's points$")
-    public void response_body_should_contain_user_s_points() throws Throwable {
-        assertNotNull(lastApiResponse.getData());
-    }
-
-
-
-    @Given("^I have a payload$")
-    public void i_have_a_payload() throws Throwable {
-        assertNotNull(pointScale);
-    }
-
-    @Given("^I have a username, a pointScale payload and points$")
-    public void i_have_a_username_a_pointScale_payload_and_points() throws Throwable {
-        assertNotNull(pointScale);
-        assertNotNull(username);
-    }
-
-    @When("^I POST it to the /pointscale/update/userpoints$")
-    public void i_POST_it_to_the_pointscale_update_userpoints() throws Throwable {
-        try {
-
-            lastApiResponse = pointScaleApi.createPointScaleWithHttpInfo(pointScale);
-            lastApiCallThrewException = false;
-            lastApiException = null;
-            lastStatusCode = lastApiException.getCode();
-        } catch (ApiException ex) {
-
-            lastApiCallThrewException = true;
-            lastApiResponse = null;
-            lastApiException = ex;
-            lastStatusCode = lastApiException.getCode();
-        }
-    }
 
     @Then("^I receive (\\d+) status code$")
     public void i_receive_status_code(int arg1) throws Throwable {
-        assertEquals(201,arg1);
+        assertEquals(arg1, lastStatusCode);
     }
 
-    @Given("^I have a PointScale payload$")
-    public void i_have_a_PointScale_payload() throws Throwable {
-        assertNotNull(pointScale);
+    @Given("^I have an API key and a pointscale name$")
+    public void i_have_an_API_key_and_a_pointscale_name() throws Throwable {
+        assertNotNull(pointScale.getAppKey());
+        assertNotNull(pointScale.getName());
     }
 
-    @When("^I POST it to the /pointScale/update/scalePoints endpoint$")
-    public void i_POST_it_to_the_pointScale_update_scalePoints_endpoint() throws Throwable {
+    @When("^I GET it to the /pointScales/\"([^\"]*)\" endpoint$")
+    public void i_GET_it_to_the_pointScales_endpoint(String arg1) throws Throwable {
         try {
-
-            lastApiResponse = pointScaleApi.createPointScaleWithHttpInfo(pointScale);
+            lastApiResponse = pointScaleApi.getPointScaleWithHttpInfo(pointScale.getName(),pointScale.getAppKey());
             lastApiCallThrewException = false;
             lastApiException = null;
             lastStatusCode = lastApiException.getCode();
@@ -310,39 +229,158 @@ public class CreationSteps {
         }
     }
 
-    @Given("^I have pointScale payload and a username$")
-    public void i_have_pointScale_payload_and_a_username() throws Throwable {
-        assertNotNull(pointScale);
-        assertNotNull(username);
-    }
-
-    @When("^I GET it to the /pointScale/user endpoint$")
-    public void i_GET_it_to_the_pointScale_user_endpoint() throws Throwable {
-
-        pointScaleApi.getPoints(pointScale.getName(), pointScale.getAppKey(), username);
-        lastApiCallThrewException = false;
-        lastApiException = null;
-        lastStatusCode = lastApiException.getCode();
-    }
-
-    @Then("^response body should contain user datas$")
-    public void response_body_should_contain_user_datas() throws Throwable {
+    @Then("^response body should contain pointscale data$")
+    public void response_body_should_contain_pointscale_data() throws Throwable {
         assertNotNull(lastApiResponse.getData());
     }
 
-    @When("^I GET it to the /pointscale/user/all endpoint$")
-    public void i_GET_it_to_the_pointscale_user_all_endpoint() throws Throwable {
-
-        pointScaleApi.getAllUsersFromPointScale(pointScale.getAppKey(),pointScale.getName());
-        lastApiCallThrewException = false;
-        lastApiException = null;
-        lastStatusCode = lastApiException.getCode();
-
+    @Given("^I have an API key, a pointscale name and an username$")
+    public void i_have_an_API_key_a_pointscale_name_and_an_username() throws Throwable {
+        assertNotNull(pointScale.getAppKey());
+        assertNotNull(pointScale.getName());
+        username = "Toto";
     }
 
-    @Then("^response body should contain every user and their points$")
-    public void response_body_should_contain_every_user_and_their_points() throws Throwable {
+
+
+    @Then("^response body should contain an username and his points$")
+    public void response_body_should_contain_an_username_and_his_points() throws Throwable {
         assertNotNull(lastApiResponse.getData());
     }
 
+
+
+    @Then("^response body should contain an users list and the points they have$")
+    public void response_body_should_contain_an_users_list_and_the_points_they_have() throws Throwable {
+        assertNotNull(lastApiResponse.getData());
+    }
+
+    /*
+     * Rule test
+     */
+    @Given("^I have a rule payload$")
+    public void i_have_a_rule_payload() throws Throwable {
+        rule = new Rule();
+        rule.setAppKey(1234);
+        rule.setDescription("Test for rules endpoint");
+        rule.setName("Test Rule");
+        rule.setPoints(10);
+
+    }
+
+    @When("^I POST it to the /rules endpoint$")
+    public void i_POST_it_to_the_rules_endpoint() throws Throwable {
+        try {
+            lastApiResponse = rulesApi.createRuleWithHttpInfo(rule);
+            lastApiCallThrewException = false;
+            lastApiException = null;
+            lastStatusCode = lastApiException.getCode();
+        } catch (ApiException ex) {
+
+            lastApiCallThrewException = true;
+            lastApiResponse = null;
+            lastApiException = ex;
+            lastStatusCode = lastApiException.getCode();
+        }
+    }
+
+    @When("^I GET it to the /rules/ruleName endpoint$")
+    public void i_GET_it_to_the_rules_ruleName_endpoint() throws Throwable {
+        try {
+            lastApiResponse = rulesApi.getRuleWithHttpInfo(rule.getAppKey(),rule.getName());
+            lastApiCallThrewException = false;
+            lastApiException = null;
+            lastStatusCode = lastApiException.getCode();
+        } catch (ApiException ex) {
+
+            lastApiCallThrewException = true;
+            lastApiResponse = null;
+            lastApiException = ex;
+            lastStatusCode = lastApiException.getCode();
+        }
+    }
+
+    @Then("^response body should contain the asked rule data$")
+    public void response_body_should_contain_the_asked_rule_data() throws Throwable {
+        assertNotNull(lastApiResponse.getData());
+    }
+
+    @Given("^I have an API key$")
+    public void i_have_an_API_key() throws Throwable {
+        assertNotNull(rule.getAppKey());
+    }
+
+    @When("^I GET it to the /rules endpoint$")
+    public void i_GET_it_to_the_rules_endpoint() throws Throwable {
+        try {
+            lastApiResponse = rulesApi.getRulesWithHttpInfo(rule.getAppKey());
+            lastApiCallThrewException = false;
+            lastApiException = null;
+            lastStatusCode = lastApiException.getCode();
+        } catch (ApiException ex) {
+
+            lastApiCallThrewException = true;
+            lastApiResponse = null;
+            lastApiException = ex;
+            lastStatusCode = lastApiException.getCode();
+        }
+    }
+
+    @Then("^Response Body should contain rules data$")
+    public void response_Body_should_contain_rules_data() throws Throwable {
+        assertNotNull(lastApiResponse.getData());
+    }
+
+    @When("^I PUT it to the /rules/ endpoint$")
+    public void i_PUT_it_to_the_rules_endpoint() throws Throwable {
+        try {
+            lastApiResponse = rulesApi.updateRuleWithHttpInfo(rule.getAppKey(),rule.getName(),rule);
+            lastApiCallThrewException = false;
+            lastApiException = null;
+            lastStatusCode = lastApiException.getCode();
+        } catch (ApiException ex) {
+
+            lastApiCallThrewException = true;
+            lastApiResponse = null;
+            lastApiException = ex;
+            lastStatusCode = lastApiException.getCode();
+        }
+    }
+
+    @When("^I DELETE it to the /rules endpoint$")
+    public void i_DELETE_it_to_the_rules_endpoint() throws Throwable {
+        try {
+            lastApiResponse = rulesApi.deleteRuleWithHttpInfo(rule);
+            lastApiCallThrewException = false;
+            lastApiException = null;
+            lastStatusCode = lastApiException.getCode();
+        } catch (ApiException ex) {
+
+            lastApiCallThrewException = true;
+            lastApiResponse = null;
+            lastApiException = ex;
+            lastStatusCode = lastApiException.getCode();
+        }
+    }
+
+    @When("^I POST it to the /rules payload endpoint$")
+    public void i_POST_it_to_the_rules_payload_endpoint() throws Throwable {
+        try {
+            lastApiResponse = rulesApi.createRuleWithHttpInfo(rule);
+            lastApiCallThrewException = false;
+            lastApiException = null;
+            lastStatusCode = lastApiException.getCode();
+        } catch (ApiException ex) {
+
+            lastApiCallThrewException = true;
+            lastApiResponse = null;
+            lastApiException = ex;
+            lastStatusCode = lastApiException.getCode();
+        }
+    }
+
+    @Then("^Response Body should contain a rules array$")
+    public void response_Body_should_contain_a_rules_array() throws Throwable {
+       assertNotNull(lastApiResponse.getData());
+    }
 }

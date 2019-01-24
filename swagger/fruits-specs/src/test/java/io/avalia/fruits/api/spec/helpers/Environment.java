@@ -1,8 +1,9 @@
 package io.avalia.fruits.api.spec.helpers;
 
-
 import io.avalia.fruits.api.BadgesApi;
+import io.avalia.fruits.api.EventsApi;
 import io.avalia.fruits.api.PointScalesApi;
+import io.avalia.fruits.api.RulesApi;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -10,7 +11,9 @@ import java.util.Properties;
 public class Environment {
 
     private BadgesApi badgeApi = new BadgesApi();
+    private EventsApi eventsApi = new EventsApi();
     private PointScalesApi pointScaleApi = new PointScalesApi();
+    private RulesApi rulesApi = new RulesApi();
 
     public Environment() throws IOException {
 
@@ -24,8 +27,9 @@ public class Environment {
     public BadgesApi getBadgesApi() {
         return badgeApi;
     }
-
+    public EventsApi getEventsApi() {return eventsApi; }
     public PointScalesApi getPointScalesApi() {
         return pointScaleApi;
     }
+    public RulesApi getRulesApi() {return rulesApi;}
 }
