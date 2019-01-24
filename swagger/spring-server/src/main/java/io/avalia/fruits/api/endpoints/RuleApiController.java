@@ -15,15 +15,18 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-07-26T19:36:34.802Z")
 
+@Transactional
 @Controller
 public class RuleApiController implements RulesApi {
 
@@ -84,14 +87,23 @@ public class RuleApiController implements RulesApi {
 
     @Override
     public ResponseEntity<Object> deleteRule(@ApiParam(value = "" ,required=true ) @RequestBody Rule rule) {
-        RuleEntity res = ruleRepository.findRuleEntityByNameAndAppKey(rule.getName(), rule.getAppKey());
-        if (res != null) {
-            ruleRepository.deleteRuleEntityByNameAndAppKey(rule.getName(), rule.getAppKey());
+        ApplicationEntity app = applicationRepository.findByApplicationID(rule.getAppKey());
+        if(app != null){
+        List<RuleEntity> rules = app.getRules();
+        List<RuleEntity> rulescopy = new ArrayList<>(rules);
+        for(RuleEntity r : rulescopy){
+            if(r.getName().equalsIgnoreCase(rule.getName()) && r.getDescription().equalsIgnoreCase(rule.getDescription())){
+                rules.remove(r);
+                ruleRepository.deleteRuleEntityByNameAndAppKey(rule.getName(),rule.getAppKey());
+            }
 
-            return ResponseEntity.accepted().build();
-        } else {
-            return ResponseEntity.badRequest().build();
         }
+            applicationRepository.save(app);
+            return  ResponseEntity.ok().build();
+
+        }
+
+        return ResponseEntity.badRequest().build();
     }
 
     @Override

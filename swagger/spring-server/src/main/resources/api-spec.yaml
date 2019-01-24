@@ -64,7 +64,7 @@ paths:
           description: success
           schema:
             $ref: '#/definitions/Badge'
-        '404':
+        '400':
           description: bagde not found
           schema:
             type: object
@@ -270,13 +270,13 @@ paths:
         - "users"
       description: get a users
       operationId: getUsers
-      consumes:
-        - application/json
       parameters:
         - $ref: '#/parameters/appKey'
+      produces:
+        - application/json
       responses:
         '200':
-          description: list of all users
+          description: sucess
           schema:
             type: array
             items:
@@ -288,14 +288,14 @@ paths:
         - "users"
       description: get a users
       operationId: getUser
-      consumes:
-        - application/json
       parameters:
         - $ref: '#/parameters/appKey'
         - $ref: '#/parameters/username'
+      produces:
+        - application/json
       responses:
         '200':
-          description: user returned
+          description: success
           schema:
             $ref: '#/definitions/User'
 
@@ -316,10 +316,7 @@ paths:
             description: success
             schema:
               type: integer
-          '404':
-            description: user not found
-            schema:
-              type: object
+
 
 parameters:
   badge:
@@ -411,6 +408,8 @@ definitions:
       name:
         type: string
       eventType:
+        type: string
+      property:
         type: string
       numberOfTimesToGetTheAward:
         type: integer

@@ -13,11 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.AccessType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Transactional
 @Controller
 public class EventsApiController implements EventsApi {
 
@@ -62,19 +64,23 @@ public class EventsApiController implements EventsApi {
 
 
         for (RuleEntity r : rules) {
-            if(r.getEventType().equalsIgnoreCase(event.getEventType())){
+            if(r.getEventType().equalsIgnoreCase(event.getEventType()) && event.getProperties().contains(r.getProperty())){
+                // Si on doit faire tout le temps l'event
                 if(r.getNumberOfTimesToGetTheAward() == 1){
+
                     List<PointScaleWithPointsEntity> pointScaleWithPointsEntities = user.getPointScaleWithPoints();
                     PointScaleWithPointsEntity pointScaleToChange = null;
 
+                    //On regarde si on a déjé un pointScaleWithPoints pour l'event
                     for(PointScaleWithPointsEntity pswp : pointScaleWithPointsEntities){
                         if(pswp.getPointScaleEntity().getName().equalsIgnoreCase(r.getPointScale().getName())){
                             pointScaleToChange = pswp;
-                            pointScaleToChange.setPoints(pswp.getPoints() + r.getPoints());
+                            pswp.setPoints(pswp.getPoints() + r.getPoints());
                             break;
                         }
                     }
 
+                    //Sinon on le crée
                     if(pointScaleToChange == null){
                         PointScaleEntity ps = pointScaleRepository.findByNameAndAppKey(r.getPointScale().getName(),r.getAppKey());
                         pointScaleToChange = new PointScaleWithPointsEntity();
@@ -87,6 +93,7 @@ public class EventsApiController implements EventsApi {
                         pointScaleWithPointsEntities.add(pointScaleToChange);
                     }
 
+                    //On regarde si il y a déjà un bage
                     List<BadgeEntity> badges = user.getBadges();
                     BadgeEntity badgeToGet = null;
                     for(BadgeEntity b : badges){
@@ -95,6 +102,7 @@ public class EventsApiController implements EventsApi {
                             break;
                     }
 
+                    //Sinon on lui ajoute le bagde
                     if(badgeToGet == null){
                         badges.add(r.getBadge());
                     }
@@ -103,10 +111,12 @@ public class EventsApiController implements EventsApi {
                     applicationRepository.save(app);
                     return ResponseEntity.accepted().build();
                 }else{
-                    int numberOfTimes = 0;
+
+                    int numberOfTimes = 1;
                     for(EventEntity e : events){
                         if(e.getUsername().equalsIgnoreCase(event.getUsername()) &&
-                                e.getEventType().equalsIgnoreCase(event.getEventType())){
+                                e.getEventType().equalsIgnoreCase(event.getEventType()) &&
+                                e.getProperties().contains(r.getProperty())){
                             numberOfTimes++;
                         }
                     }
@@ -114,6 +124,7 @@ public class EventsApiController implements EventsApi {
                     if(numberOfTimes == r.getNumberOfTimesToGetTheAward()){
                         List<PointScaleWithPointsEntity> pointScaleWithPointsEntities = user.getPointScaleWithPoints();
                         PointScaleWithPointsEntity pointScaleToChange = null;
+
                         for(PointScaleWithPointsEntity pswp : pointScaleWithPointsEntities){
                             if(pswp.getPointScaleEntity().getName().equalsIgnoreCase(r.getPointScale().getName())){
                                 pointScaleToChange = pswp;
@@ -123,21 +134,37 @@ public class EventsApiController implements EventsApi {
                         }
 
                         if(pointScaleToChange == null){
+                            PointScaleEntity ps = pointScaleRepository.findByNameAndAppKey(r.getPointScale().getName(),r.getAppKey());
                             pointScaleToChange = new PointScaleWithPointsEntity();
+                            if(ps == null){
+                                pointScaleToChange.setPointScaleEntity(r.getPointScale());
+                            }else{
+                                pointScaleToChange.setPointScaleEntity(ps);
+                            }
                             pointScaleToChange.setPoints(r.getPoints());
-                            pointScaleToChange.setPointScaleEntity(r.getPointScale());
+                            pointScaleWithPointsEntities.add(pointScaleToChange);
                         }
 
                         List<BadgeEntity> badges = user.getBadges();
                         BadgeEntity badgeToGet = null;
-                        if(!badges.contains(r.getBadge())){
+                        for(BadgeEntity b : badges){
+                            if(b.getName().equalsIgnoreCase(r.getBadge().getName()) && b.getDescription().equalsIgnoreCase(r.getBadge().getDescription()))
+                                badgeToGet = b;
+                            break;
+                        }
+
+                        if(badgeToGet == null){
                             badges.add(r.getBadge());
                         }
 
-                        users.add(user);
+                        events.add(tools.toEventEntity(event));
                         applicationRepository.save(app);
                         return ResponseEntity.accepted().build();
 
+                    }else{
+                        events.add(tools.toEventEntity(event));
+                        applicationRepository.save(app);
+                        return ResponseEntity.accepted().build();
                     }
                 }
             }
@@ -146,4 +173,7 @@ public class EventsApiController implements EventsApi {
         return ResponseEntity.badRequest().build();
 
     }
+
+
 }
+

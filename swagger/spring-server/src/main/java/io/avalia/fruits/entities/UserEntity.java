@@ -14,7 +14,7 @@ public class UserEntity implements Serializable{
     private long id;
 
     private long idFromApplication;
-    private String username;
+    private String name;
     private int appKey;
 
     @OneToMany(cascade = CascadeType.ALL)
@@ -27,11 +27,11 @@ public class UserEntity implements Serializable{
     public long getId() {return id; }
 
     public String getUsername() {
-        return username;
+        return name;
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.name = username;
     }
 
     public int getAppKey() {
@@ -56,5 +56,17 @@ public class UserEntity implements Serializable{
 
     public void setBadges(List<BadgeEntity> badges){
         this.badges = badges;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public long getIdFromApplication() {
+        return idFromApplication;
+    }
+
+    public void setIdFromApplication(long idFromApplication) {
+        this.idFromApplication = idFromApplication;
     }
 }
