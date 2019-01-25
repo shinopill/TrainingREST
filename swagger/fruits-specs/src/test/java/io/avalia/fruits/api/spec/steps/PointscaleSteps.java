@@ -30,6 +30,8 @@ public class PointscaleSteps {
     private boolean lastApiCallThrewException;
     private int lastStatusCode;
 
+    final private int generateAppKey = 26;
+
     public PointscaleSteps(Environment environment) {
         env = environment;
         pointscalesApi = env.getpointscalesApi();
@@ -45,7 +47,7 @@ public class PointscaleSteps {
     @Given("^I have a pointscale payload$")
     public void i_have_a_pointscale_payload() throws Throwable {
         pointscale = new PointScale();
-        pointscale.setAppKey(753);
+        pointscale.setAppKey(generateAppKey);
         pointscale.setName("TesteurPro");
         pointscale.setDescription("Pointscale de test");
 
@@ -78,7 +80,7 @@ public class PointscaleSteps {
     @Given("^I have an API key and a pointscale name$")
     public void i_have_an_API_key_and_a_pointscale_name() throws Throwable {
         pointscale = new PointScale();
-        pointscale.setAppKey(753);
+        pointscale.setAppKey(generateAppKey);
         pointscale.setName("TesteurPro");
         pointscale.setDescription("Pointscale de test");
     }
@@ -125,7 +127,7 @@ public class PointscaleSteps {
     @Given("^I have an API key, a pointscale name and an username$")
     public void i_have_an_API_key_a_pointscale_name_and_an_username() throws Throwable {
         pointscale = new PointScale();
-        pointscale.setAppKey(753);
+        pointscale.setAppKey(generateAppKey);
         pointscale.setName("TesteurPro");
         pointscale.setDescription("Pointscale de test");
     }

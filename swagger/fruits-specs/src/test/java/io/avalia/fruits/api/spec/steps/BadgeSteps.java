@@ -13,6 +13,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import io.avalia.fruits.api.spec.helpers.Environment;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 
 public class BadgeSteps {
 
@@ -25,9 +27,12 @@ public class BadgeSteps {
     private boolean lastApiCallThrewException;
     private int lastStatusCode;
 
+    final private int generateAppKey = 26;
+
     public BadgeSteps(Environment environment) {
         env = environment;
         badgeApi = env.getBadgesApi();
+
     }
 
 
@@ -40,7 +45,7 @@ public class BadgeSteps {
     @Given("^I have a badge payload$")
     public void i_have_a_badge_payload() throws Throwable {
         badge = new Badge();
-        badge.setAppKey(210);
+        badge.setAppKey(generateAppKey);
         badge.setName("tata");
         badge.setDescription("Badge de test pour la validation de la spec");
     }
@@ -63,7 +68,7 @@ public class BadgeSteps {
         }
     }
 
-    @Then("^I receive a (\\d+) status code$")
+    @Then("^I receive a (\\d+) status code from the /badges endpoint$")
     public void i_receive_a_status_code(int arg1) throws Throwable {
         assertEquals(arg1,lastStatusCode);
     }

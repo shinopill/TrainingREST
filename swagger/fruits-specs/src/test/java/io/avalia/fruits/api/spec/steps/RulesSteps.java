@@ -10,6 +10,8 @@ import io.avalia.fruits.api.dto.Badge;
 import io.avalia.fruits.api.dto.Rule;
 import io.avalia.fruits.api.spec.helpers.Environment;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -23,10 +25,12 @@ public class RulesSteps {
     private ApiException lastApiException;
     private boolean lastApiCallThrewException;
     private int lastStatusCode;
+    final private int generateAppKey = 26;
 
     public RulesSteps(Environment environment) {
         env = environment;
         rulesApi = env.getRulesApi();
+
     }
 
     @Given("^there is a rules server$")
@@ -39,11 +43,11 @@ public class RulesSteps {
 
         Badge badgeTemp = new Badge();
         badgeTemp.setName("Test");
-        badgeTemp.setAppKey(654);
+        badgeTemp.setAppKey(generateAppKey);
         badgeTemp.setDescription("test de rules");
 
         rule = new Rule();
-        rule.setAppKey(654);
+        rule.setAppKey(generateAppKey);
         rule.setDescription("Test for rules endpoint");
         rule.setName("Test Rule");
         rule.setPoints(20);
@@ -99,11 +103,11 @@ public class RulesSteps {
     public void i_have_an_API_key() throws Throwable {
         Badge badgeTemp = new Badge();
         badgeTemp.setName("Test");
-        badgeTemp.setAppKey(654);
+        badgeTemp.setAppKey(generateAppKey);
         badgeTemp.setDescription("test de rules");
 
         rule = new Rule();
-        rule.setAppKey(654);
+        rule.setAppKey(generateAppKey);
         rule.setDescription("Test for rules endpoint");
         rule.setName("Test Rule");
         rule.setPoints(20);
