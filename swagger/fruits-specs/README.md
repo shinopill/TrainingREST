@@ -1,9 +1,9 @@
-#Cucumber Test
+# Cucumber Test
   
 Pour lancer les tests, lancer le serveur avec `docker-compose up` à partir du dossier spring-server/docker, puis dans le dossier fruits-spec, lancez la commande :  
 `mvn clean test`
   
-##Déroulement des tests
+## Déroulement des tests
   - Badges
     - un badge est correctement crée
     - l'API nous retourne le badge correctement crée
