@@ -1,5 +1,7 @@
 package io.avalia.fruits.api.spec.steps;
 
+import cucumber.api.PendingException;
+import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -70,5 +72,29 @@ public class EventsSteps {
     @Then("^I receive a (\\d+) status code from /events endpoint$")
     public void i_receive_a_status_code(int arg1) throws Throwable {
         assertEquals(arg1,lastStatusCode);
+    }
+
+    @Given("^I have a badge payload, a pointscale payload, an user and a rule that uses them$")
+    public void i_have_a_badge_payload_a_pointscale_payload_an_user_and_a_rule_that_uses_them() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }
+
+    @When("^I post an event triggering the rule$")
+    public void i_post_an_event_triggering_the_rule() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }
+
+    @Then("^the user should win the points on the pointscale$")
+    public void the_user_should_win_the_points_on_the_pointscale() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }
+
+    @And("^win the badge$")
+    public void win_the_badge() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
     }
 }

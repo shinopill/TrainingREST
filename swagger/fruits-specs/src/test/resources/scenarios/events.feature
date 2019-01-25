@@ -10,7 +10,9 @@ Feature: Managing Events
 
   Scenario: an user win a badge and get some points
     Given I have a badge payload, a pointscale payload, an user and a rule that uses them
-    When I post an event with the rule
+    When I post an event triggering the rule
+    Then the user should win the points on the pointscale
+    And win the badge
 
 
 
