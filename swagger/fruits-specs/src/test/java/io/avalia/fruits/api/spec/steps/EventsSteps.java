@@ -8,6 +8,7 @@ import cucumber.api.java.en.When;
 import io.avalia.fruits.ApiException;
 import io.avalia.fruits.ApiResponse;
 import io.avalia.fruits.api.EventsApi;
+import io.avalia.fruits.api.dto.Badge;
 import io.avalia.fruits.api.dto.Event;
 import io.avalia.fruits.api.spec.helpers.Environment;
 
@@ -29,6 +30,9 @@ public class EventsSteps {
     private boolean lastApiCallThrewException;
     private int lastStatusCode;
 
+    private final int appGeneratedKey = 27;
+
+
     public EventsSteps(Environment environment) {
         env = environment;
         eventsApi = env.getEventsApi();
@@ -44,14 +48,15 @@ public class EventsSteps {
 
         List<String> properties = new ArrayList<>();
         properties.add("proprieteTest");
-        properties.add("2eTest");
 
         event = new Event();
-        event.setAppKey(456);
+        event.setAppKey(appGeneratedKey);
         event.setEventType("TestEvent");
         event.setTimestamp(new Date().toString());
         event.setUsername("Toto");
         event.setProperties(properties);
+
+
     }
 
     @When("^I POST it to the /events endpoint$")
@@ -76,8 +81,8 @@ public class EventsSteps {
 
     @Given("^I have a badge payload, a pointscale payload, an user and a rule that uses them$")
     public void i_have_a_badge_payload_a_pointscale_payload_an_user_and_a_rule_that_uses_them() throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+        Badge badge = new Badge();
+
     }
 
     @When("^I post an event triggering the rule$")

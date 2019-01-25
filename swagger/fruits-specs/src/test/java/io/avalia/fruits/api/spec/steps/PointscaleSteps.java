@@ -7,8 +7,8 @@ import cucumber.api.java.en.When;
 import io.avalia.fruits.ApiException;
 import io.avalia.fruits.ApiResponse;
 
-import io.avalia.fruits.api.PointsApi;
 import io.avalia.fruits.api.PointscalesApi;
+import io.avalia.fruits.api.PointsApi;
 import io.avalia.fruits.api.dto.PointScale;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
@@ -30,7 +30,7 @@ public class PointscaleSteps {
     private boolean lastApiCallThrewException;
     private int lastStatusCode;
 
-    final private int generateAppKey = 26;
+    final private int generateAppKey = 27;
 
     public PointscaleSteps(Environment environment) {
         env = environment;
@@ -48,7 +48,7 @@ public class PointscaleSteps {
     public void i_have_a_pointscale_payload() throws Throwable {
         pointscale = new PointScale();
         pointscale.setAppKey(generateAppKey);
-        pointscale.setName("TesteurPro");
+        pointscale.setName("Testeur");
         pointscale.setDescription("Pointscale de test");
 
     }
@@ -58,7 +58,7 @@ public class PointscaleSteps {
 
         try {
 
-            lastApiResponse = pointscalesApi.createPointScaleWithHttpInfo(pointscale);
+            lastApiResponse = pointscalesApi.getPointScaleWithHttpInfo(pointscale.getName(), pointscale.getAppKey());
             lastApiCallThrewException = false;
             lastApiException = null;
             lastStatusCode = lastApiResponse.getStatusCode();

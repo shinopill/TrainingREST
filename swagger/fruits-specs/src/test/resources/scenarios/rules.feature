@@ -16,7 +16,7 @@ Feature: Managing rules
   Scenario: Check the rule has been created
     Given I have a rule payload
     When I GET it to the /rules/ruleName endpoint
-    Then I receive a 202 status code from /rules endpoint
+    Then I receive a 200 status code from /rules endpoint
     And response body should contain the asked rule data
 
   Scenario: Get rules for my application

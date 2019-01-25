@@ -7,6 +7,7 @@ import io.avalia.fruits.ApiException;
 import io.avalia.fruits.ApiResponse;
 import io.avalia.fruits.api.RulesApi;
 import io.avalia.fruits.api.dto.Badge;
+import io.avalia.fruits.api.dto.PointScale;
 import io.avalia.fruits.api.dto.Rule;
 import io.avalia.fruits.api.spec.helpers.Environment;
 
@@ -25,7 +26,7 @@ public class RulesSteps {
     private ApiException lastApiException;
     private boolean lastApiCallThrewException;
     private int lastStatusCode;
-    final private int generateAppKey = 26;
+    final private int generateAppKey = 27;
 
     public RulesSteps(Environment environment) {
         env = environment;
@@ -46,6 +47,11 @@ public class RulesSteps {
         badgeTemp.setAppKey(generateAppKey);
         badgeTemp.setDescription("test de rules");
 
+        PointScale pointScale = new PointScale();
+        pointScale.setAppKey(generateAppKey);
+        pointScale.setName("pointScaleTest");
+        pointScale.setDescription("pointscale de test");
+
         rule = new Rule();
         rule.setAppKey(generateAppKey);
         rule.setDescription("Test for rules endpoint");
@@ -53,8 +59,10 @@ public class RulesSteps {
         rule.setPoints(20);
         rule.setBadge(badgeTemp);
         rule.setNumberOfTimesToGetTheAward(5);
-        rule.setEventType("Reponse");
-        rule.setProperty("unePropriété");
+        rule.setEventType("TestEvent");
+        rule.setPointScale(pointScale);
+        rule.setProperty("proprieteTest");
+
     }
 
     @When("^I POST it to the /rules endpoint$")
@@ -113,8 +121,8 @@ public class RulesSteps {
         rule.setPoints(20);
         rule.setBadge(badgeTemp);
         rule.setNumberOfTimesToGetTheAward(5);
-        rule.setEventType("Reponse");
-        rule.setProperty("unePropriété");
+        rule.setEventType("TestEvent");
+
     }
 
     @When("^I GET it to the /rules endpoint$")

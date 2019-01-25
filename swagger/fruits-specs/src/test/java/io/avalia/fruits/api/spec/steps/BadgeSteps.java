@@ -27,7 +27,7 @@ public class BadgeSteps {
     private boolean lastApiCallThrewException;
     private int lastStatusCode;
 
-    final private int generateAppKey = 26;
+    final private int generateAppKey = 27;
 
     public BadgeSteps(Environment environment) {
         env = environment;
