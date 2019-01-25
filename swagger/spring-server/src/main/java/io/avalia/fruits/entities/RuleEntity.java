@@ -13,6 +13,9 @@ public class RuleEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @org.springframework.data.annotation.Version
+    private long version;
+
     private int appKey;
     private String name;
     private String eventType;

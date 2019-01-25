@@ -10,6 +10,9 @@ public class PointScaleWithPointsEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @org.springframework.data.annotation.Version
+    private long version;
+
     @OneToOne(cascade = CascadeType.ALL)
     private PointScaleEntity pointScaleEntity;
 
